@@ -1,4 +1,4 @@
-baseURL = "http://example.org/"
-languageCode = "en-us"
-title = "My New Hugo Site"
+baseURL = "https://jmbloges.servezas.org/"
+languageCode = "es-es"
+title = "Blog-o-matic 2000"
 theme = "bootstrap4-blog"

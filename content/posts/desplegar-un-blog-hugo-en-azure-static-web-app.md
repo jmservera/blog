@@ -37,11 +37,11 @@ Esto nos creará una GitHub Action que ejecutará automáticamente hugo para gen
 Y al hacer un push a nuestro repositorio se desplegará nuestro blog automáticamente.
 
 
-[repo-create]: /static/desplegar-un-blog-hugo/createrepo.png "Crea un repositorio en GitHub"
-[hugo-create]: /static/desplegar-un-blog-hugo/createhugofirstpost.png "Crea el primer post con hugo"
+[repo-create]: /desplegar-un-blog-hugo/createrepo.png "Crea un repositorio en GitHub"
+[hugo-create]: /desplegar-un-blog-hugo/createhugofirstpost.png "Crea el primer post con hugo"
 
-[webapp-create]: /static/desplegar-un-blog-hugo/createstaticwebapp.png "Crea una web app estática"
+[webapp-create]: /desplegar-un-blog-hugo/createstaticwebapp.png "Crea una web app estática"
 
-[webapp-config]: /static/desplegar-un-blog-hugo/createstaticwebapp_2.png "Configurar repositorio de GitHub"
+[webapp-config]: /desplegar-un-blog-hugo/createstaticwebapp_2.png "Configurar repositorio de GitHub"
 
-[webapp-config-artifact]: /static/desplegar-un-blog-hugo/createstaticwebapp_3.png "Configurar carpeta public como output de hugo"
+[webapp-config-artifact]: /desplegar-un-blog-hugo/createstaticwebapp_3.png "Configurar carpeta public como output de hugo"
