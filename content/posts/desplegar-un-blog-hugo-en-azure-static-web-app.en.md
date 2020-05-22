@@ -1,13 +1,13 @@
 ---
-title: "Desplegar Un Blog Hugo en Azure Static Web App"
+title: "How to deploy an HUGO site in Azure Static Web App"
 images: [/desplegar-un-blog-hugo/createstaticwebapp.png]
 date: 2020-05-21T23:24:26+02:00
 draft: false
 ---
 
-Hace más de 5 años que no escribo ningún artículo en mi blog personal y aunque lo he hechado en falta, he estado enfocado en tantas otras cosas que hasta perdí mi antiguo dominio. El pasado día 19, mientras estaba mirando la presentación de las [Static Web App](https://mybuild.microsoft.com/sessions/898230c4-1350-4fc6-acba-6baf1a58d76a?source=sessions) en el Build, decidí hacer una prueba con [HUGO](https://gohugo.io) para generar mi nuevo blog. Os explico aquí cómo lo he hecho, pues aunque es muy fácil hay que tener en cuenta algún detalle para no morir en el intento, pues recordad que todavía hoy (21 mayo 2020) es una preview.
+It's been over 5 years since I don't write on my personal blog, and since then I missed it a lot, but I've been focusing in other things  and I have lots of articles in my unfinished folder. But, on the 19th of this month, while I was watching the [Static Web App](https://mybuild.microsoft.com/sessions/898230c4-1350-4fc6-acba-6baf1a58d76a?source=sessions) presentation, I decided to test it with a  [HUGO](https://gohugo.io) blog. It's incredibly easy, but I wanted to share with you some small details so you find it even easier, since, remember, it's still a preview on May 21 2020.
 
-## Creación del blog
+## Blog creation
 
 Debo confesar que soy un completo novato en esto de los blogs estáticos. Usé [Wordpress](https://jmservera.wordpress.com) durante muchos años, pero es verdad que 5 años más tarde todo ha cambiado y utilizo [Markdown](https://daringfireball.net/projects/markdown/) hasta para mis recetas de cocina, así que esto no puede ser tan difícil. Como este artículo no va de cómo crear un blog tenéis una guía fantástica en la web de [HUGO](https://gohugo.io/getting-started/quick-start/). Vamos a realizar los pasos básicos:
 
