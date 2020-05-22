@@ -1,9 +1,14 @@
 DefaultContentLanguage = "es"
+baseURL = "https://jmblog-es.servezas.org"
 linkedin = "https://www.linkedin.com/in/jmservera/"
 github = "https://github.com/jmservera"
 theme = "bootstrap4-blog"
 enableGitInfo = true
 paginate = 5
+
+[permalinks]
+  posts = "/:year/:month/:title/"
+  page = "/:slug/"
 
 [params]
     author = "Juan Manuel Servera"
@@ -17,12 +22,19 @@ paginate = 5
         languageCode = "es-es"
         languageName = "Español"
         title = "Blog-o-mático 2000"
-        baseURL = "https://jmblog-es.servezas.org"
         theme = "bootstrap4-blog"
         weight = 1
+        [[languages.es.menu.navbar]]
+            name = "English"
+            url = "/en"
     [languages.en]
         languageCode = "en-us"
         languageName = "English"
         title = "Blog-o-matic 2000"
-        baseURL = "https://jmblog-en.servezas.org"
         weight = 2
+        [languages.en.params.sidebar]
+            about = "Another blog"
+        [[languages.en.menu.navbar]]
+            name = "Español"
+            url = "/"
+        
