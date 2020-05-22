@@ -1,4 +1,4 @@
-baseURL = "https://salmon-glacier-076890503.azurestaticapps.net"
+baseURL = "https://jmblog-es.serveraonline.org"
 languageCode = "es-es"
 title = "Blog-o-matic 2000"
 theme = "bootstrap4-blog"

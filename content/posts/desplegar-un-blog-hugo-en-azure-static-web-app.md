@@ -4,27 +4,29 @@ date: 2020-05-21T23:24:26+02:00
 draft: false
 ---
 
+El pasado día 19 presentamos en Build las [Static Web App](https://mybuild.microsoft.com/sessions/898230c4-1350-4fc6-acba-6baf1a58d76a?source=sessions).
+
 ## Creación del blog
 
-Creamos un repo en github
+Creamos un repo en github para nuestro blog:
 
-![alt text][repo-create]
+![creación del repositorio en GitHub][repo-create]
 
 Luego creamos un blog con [hugo](https://gohugo.io):
 
-![alt text][hugo-create]
+![Usamos Hugo para crear un blog con un tema][hugo-create]
 
 Creamos en Azure una [Web App Estática](https://azure.microsoft.com/en-us/services/app-service/static/)
 
-![alt text][webapp-create]
+![Creación de la Static Web App][webapp-create]
 
 Tendremos que configurar nuestras credenciales de GitHub
 
-![alt text][webapp-config]
+![Configuración de la web][webapp-config]
 
 También hay que cambiar la entrada App artifact location al valor *public* porque es la carpeta de salida por defecto de Hugo:
 
-![alt text][webapp-config-artifact]
+![Configurar dónde buscará la GitHub Action el contenido][webapp-config-artifact]
 
 
 Esto nos creará una GitHub Action que ejecutará automáticamente hugo para generar nuestro blog y desplegarlo en nuestra nueva web app, pero en el caso de hugo vamos a necesitar modificar el paso de checkout para que se descargue también los submódulos que contienen nuestro tema. En la carpeta .github/workflows encontraremos un archivo yml, ahí modificaremos el primer paso así: 
