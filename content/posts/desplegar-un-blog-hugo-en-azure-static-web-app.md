@@ -4,32 +4,38 @@ date: 2020-05-21T23:24:26+02:00
 draft: false
 ---
 
-El pasado día 19 presentamos en Build las [Static Web App](https://mybuild.microsoft.com/sessions/898230c4-1350-4fc6-acba-6baf1a58d76a?source=sessions).
+Hace más de 5 años que no escribo ningún artículo en mi blog personal y hace algún tiempo que pienso en volver a retomarlo, aunque lo había dejado tanto que incluso perdí mi dominio. Mientras pensaba en ello de nuevo, estaba mirando el Build el pasado día 19 donde presentamos las [Static Web App](https://mybuild.microsoft.com/sessions/898230c4-1350-4fc6-acba-6baf1a58d76a?source=sessions), así que decidí hacer una prueba y hacer unas pruebas con [HUGO](https://gohugo.io) para generar mi nuevo blog. Os explico aquí cómo lo he hecho, pues aunque es muy fácil hay que tener en cuenta algún detalle para no morir en el intento, pues recordad que todavía hoy (21 mayo 2020) es una preview.
 
 ## Creación del blog
 
-Creamos un repo en github para nuestro blog:
+Debo confesar que soy un completo novato en esto de los blogs estáticos. Usé [Wordpress](https://jmservera.wordpress.com) durante muchos años, pero es verdad que 5 años más tarde todo ha cambiado y utilizo [Markdown](https://daringfireball.net/projects/markdown/) hasta para mis recetas de cocina, así que esto no puede ser tan difícil. Como este artículo no va de cómo crear un blog tenéis una guía fantástica en la web de [HUGO](https://gohugo.io/getting-started/quick-start/). Vamos a realizar los pasos básicos:
 
-![creación del repositorio en GitHub][repo-create]
+1. Para poder integrar nuestro sitio estático con la generación del blog, necesitamos que nuestro código este en GitHub, así que creamos un repositorio para nuestro blog:
+  ![Creación del repositorio en GitHub][repo-create]
 
-Luego creamos un blog con [hugo](https://gohugo.io):
+2. Luego creamos un blog con [hugo](https://gohugo.io), yo he instalado [HUGO 0.59.1](https://github.com/gohugoio/hugo/releases/tag/v0.59.1) que es el que por ahora es 100% compatible con las acciones de GitHub que se van a ejecutar luego. En la imagen veis los pásos básicos que he realizado:
+  ![Usamos Hugo para crear un blog con un tema][hugo-create]
+  Podéis ver que he hecho lo siguiente:
+  1. He clonado el respositorio
+  2. He creado un nuevo sitio con HUGO: ```hugo new site blog_es```
+  3. He añadido el tema bootstrap-4 usando: ```git submodule add https://github.com/alanorth/hugo-theme-bootstrap4-blog themes/bootsrap4-blog```
+  4. He aplicado el tema y he creado este post con ```hugo new posts/....```
 
-![Usamos Hugo para crear un blog con un tema][hugo-create]
+## Despliegue de nuestro blog en Azure Static Web App
 
-Creamos en Azure una [Web App Estática](https://azure.microsoft.com/en-us/services/app-service/static/)
+Una vez que ya tenemos nuestro blog preparado con HUGO y subido a github, podemos crear en Azure una nueva [Web App Estática](https://azure.microsoft.com/en-us/services/app-service/static/).
 
 ![Creación de la Static Web App][webapp-create]
 
-Tendremos que configurar nuestras credenciales de GitHub
+Tendremos que configurar nuestras credenciales de GitHub:
 
 ![Configuración de la web][webapp-config]
 
-También hay que cambiar la entrada App artifact location al valor *public* porque es la carpeta de salida por defecto de Hugo:
+Y también hay que cambiar la entrada App artifact location al valor *public* porque es la carpeta de salida por defecto de Hugo:
 
 ![Configurar dónde buscará la GitHub Action el contenido][webapp-config-artifact]
 
-
-Esto nos creará una GitHub Action que ejecutará automáticamente hugo para generar nuestro blog y desplegarlo en nuestra nueva web app, pero en el caso de hugo vamos a necesitar modificar el paso de checkout para que se descargue también los submódulos que contienen nuestro tema. En la carpeta .github/workflows encontraremos un archivo yml, ahí modificaremos el primer paso así: 
+Esto nos creará una GitHub Action que ejecutará automáticamente hugo para generar nuestro blog y desplegarlo en nuestra nueva web app, pero el primer despliegue no funcionará. Si recordáis, para crear añadir un tema en HUGO hemos utilizado un submódulo, así que tendremos que modificar el paso de *checkout* en la acción para que se descargue también los submódulos que contienen nuestro tema. En la carpeta *.github/workflows* encontraremos un archivo yml, ahí modificaremos el primer paso así: 
 
 ``` yaml
     - uses: actions/checkout@v2
