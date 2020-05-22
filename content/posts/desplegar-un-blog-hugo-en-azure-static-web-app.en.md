@@ -7,6 +7,8 @@ draft: false
 
 It's been over 5 years since I don't write on my personal blog, and since then I missed it a lot, but I've been focusing in other things  and I have lots of articles in my unfinished folder. But, on the 19th of this month, while I was watching the [Static Web App](https://mybuild.microsoft.com/sessions/898230c4-1350-4fc6-acba-6baf1a58d76a?source=sessions) presentation, I decided to test it with a  [HUGO](https://gohugo.io) blog. It's incredibly easy, but I wanted to share with you some small details so you find it even easier, since, remember, it's still a preview on May 21 2020.
 
+> **Disclaimer**: there is an advanced tutorial with a custom HUGO build here: https://docs.microsoft.com/en-us/azure/static-web-apps/publish-hugo
+
 ## Blog creation
 
 Debo confesar que soy un completo novato en esto de los blogs estáticos. Usé [Wordpress](https://jmservera.wordpress.com) durante muchos años, pero es verdad que 5 años más tarde todo ha cambiado y utilizo [Markdown](https://daringfireball.net/projects/markdown/) hasta para mis recetas de cocina, así que esto no puede ser tan difícil. Como este artículo no va de cómo crear un blog tenéis una guía fantástica en la web de [HUGO](https://gohugo.io/getting-started/quick-start/). Vamos a realizar los pasos básicos:
@@ -45,6 +47,7 @@ Esto nos creará una [GitHub Action](https://github.com/features/actions) que ej
 ```
 Y al hacer un push a nuestro repositorio se desplegará nuestro blog automáticamente.
 
+![Blog picture][blog-picture]
 
 [repo-create]: /desplegar-un-blog-hugo/createrepo.png "Crea un repositorio en GitHub"
 [hugo-create]: /desplegar-un-blog-hugo/createhugofirstpost.png "Crea el primer post con hugo"
@@ -54,3 +57,5 @@ Y al hacer un push a nuestro repositorio se desplegará nuestro blog automática
 [webapp-config]: /desplegar-un-blog-hugo/createstaticwebapp_2.png "Configurar repositorio de GitHub"
 
 [webapp-config-artifact]: /desplegar-un-blog-hugo/createstaticwebapp_3.png "Configurar carpeta public como output de hugo"
+
+[blog-picture]: /desplegar-un-blog-hugo/blogpicture_en.png "Blog picture"
