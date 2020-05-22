@@ -1,4 +1,6 @@
-baseURL = "https://jmblog-es.serveraonline.org"
+DefaultContentLanguage = "es"
+baseURL = "https://jmblog-es.servezas.org"
 languageCode = "es-es"
+languageName = "Español"
 title = "Blog-o-matic 2000"
 theme = "bootstrap4-blog"

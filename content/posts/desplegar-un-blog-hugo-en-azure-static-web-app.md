@@ -35,7 +35,7 @@ Y también hay que cambiar la entrada App artifact location al valor *public* po
 
 ![Configurar dónde buscará la GitHub Action el contenido][webapp-config-artifact]
 
-Esto nos creará una GitHub Action que ejecutará automáticamente hugo para generar nuestro blog y desplegarlo en nuestra nueva web app, pero el primer despliegue no funcionará. Si recordáis, para crear añadir un tema en HUGO hemos utilizado un submódulo, así que tendremos que modificar el paso de *checkout* en la acción para que se descargue también los submódulos que contienen nuestro tema. En la carpeta *.github/workflows* encontraremos un archivo yml, ahí modificaremos el primer paso así: 
+Esto nos creará una [GitHub Action](https://github.com/features/actions) que ejecutará automáticamente hugo para generar nuestro blog y desplegarlo en nuestra nueva web app, pero el primer despliegue no funcionará. Si recordáis, para crear añadir un tema en HUGO hemos utilizado un submódulo, así que tendremos que modificar el paso de *checkout* en la acción para que se descargue también los submódulos que contienen nuestro tema. En la carpeta *.github/workflows* encontraremos un archivo yml, ahí modificaremos el primer paso así: 
 
 ``` yaml
     - uses: actions/checkout@v2
