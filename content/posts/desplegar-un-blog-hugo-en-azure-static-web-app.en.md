@@ -1,8 +1,8 @@
 ---
 title: "How to deploy an HUGO site in Azure Static Web App"
-images: [/desplegar-un-blog-hugo/createstaticwebapp.png]
+featured_image: "/desplegar-un-blog-hugo/createstaticwebapp.png"
 date: 2020-05-21T23:24:26+02:00
-draft: false
+draft: true
 ---
 
 It's been over 5 years since I don't write on my personal blog, and since then I missed it a lot, but I've been focusing in other things  and I have lots of articles in my unfinished folder. But, on the 19th of this month, while I was watching the [Static Web App](https://mybuild.microsoft.com/sessions/898230c4-1350-4fc6-acba-6baf1a58d76a?source=sessions) presentation, I decided to test it with a  [HUGO](https://gohugo.io) blog. It's incredibly easy, but I wanted to share with you some small details so you find it even easier, since, remember, it's still a preview on May 21 2020.
