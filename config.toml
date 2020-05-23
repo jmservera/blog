@@ -1,5 +1,5 @@
 DefaultContentLanguage = "es"
-baseURL = "https://jmblog.servezas.org"
+baseURL = "https://jmblg.servezas.org"
 linkedin = "https://www.linkedin.com/in/jmservera/"
 github = "https://github.com/jmservera"
 theme = "ananke"
