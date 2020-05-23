@@ -7,11 +7,11 @@ draft: false
 
 El pasado día 19, mientras estaba mirando la presentación de las [Static Web App](https://mybuild.microsoft.com/sessions/898230c4-1350-4fc6-acba-6baf1a58d76a?source=sessions) en el Build, decidí hacer una prueba con [HUGO](https://gohugo.io) para retomar mi blog tras 5 años de inactividad, 
 
-TL;DR: [Static Web Apps](https://docs.microsoft.com/en-us/azure/static-web-apps/) te permite desplegar contenido estático y asignarle un dominio, Azure Web Apps se encarga del resto: creación de una GitHub Action para despliegue contínuo, SSL para nuestro dominio personalizado, distribución global y llamar a alguna Azure Function si hace falta alguna pequeña parte dinámica. Y lo mejor de todo es que es GRATIS, sí, incluso el certificado SSL para tu sitio.
+TL;DR: [Static Web Apps](https://docs.microsoft.com/azure/static-web-apps/) te permite desplegar contenido estático y asignarle un dominio, Azure Web Apps se encarga del resto: creación de una GitHub Action para despliegue contínuo, SSL para nuestro dominio personalizado, distribución global y llamar a alguna Azure Function si hace falta alguna pequeña parte dinámica. Y lo mejor de todo es que es GRATIS, sí, incluso el certificado SSL para tu sitio.
 
 <!--more-->
 
-> **Aviso**: todo esto lo hice sin mirar antes la [explicación oficial](https://docs.microsoft.com/es-es/azure/static-web-apps/publish-hugo), donde podréis encontrar una guía avanzada con un despliegue personalizado de HUGO.
+> **Aviso**: todo esto lo hice sin mirar antes la [explicación oficial](https://docs.microsoft.com/azure/static-web-apps/publish-hugo), donde podréis encontrar una guía avanzada con un despliegue personalizado de HUGO.
 
 
 ## Creación del blog
