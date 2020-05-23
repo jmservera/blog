@@ -7,7 +7,7 @@ draft: false
 
 El pasado día 19, mientras estaba mirando la presentación de las [Static Web App](https://mybuild.microsoft.com/sessions/898230c4-1350-4fc6-acba-6baf1a58d76a?source=sessions) en el Build, decidí hacer una prueba con [HUGO](https://gohugo.io) para retomar mi blog tras 5 años de inactividad, 
 
-TL;DR: [Static Web Apps](https://docs.microsoft.com/en-us/azure/static-web-apps/) te permite desplegar contenido estático y asignarle un dominio, Azure Web Apps se encarga del resto: creación de una GitHub Action para despliegue contínuo, SSL para nuestro dominio personalizado, distribución global y llamar a alguna Azure Function si hace falta alguna pequeña parte dinámica.
+TL;DR: [Static Web Apps](https://docs.microsoft.com/en-us/azure/static-web-apps/) te permite desplegar contenido estático y asignarle un dominio, Azure Web Apps se encarga del resto: creación de una GitHub Action para despliegue contínuo, SSL para nuestro dominio personalizado, distribución global y llamar a alguna Azure Function si hace falta alguna pequeña parte dinámica. Y lo mejor de todo es que es GRATIS, sí, incluso el certificado SSL para tu sitio.
 
 <!--more-->
 
@@ -57,7 +57,26 @@ Y al hacer un push a nuestro repositorio se desplegará nuestro blog automática
 
 ![Imagen del blog][blog-picture]
 
+## Cómo funciona todo esto
 
+La magia se realiza desde dos elementos completamente diferenciados:
+
+* Desde Azure se proporciona toda la infraestructura que ya existía en Azure para App Services como son los Custom domains, Slots de despliegue (aquí se llaman Environments), autenticación y acceso por roles, control de rutas y, para poder tener una API stateless que sirva contenido dinámico, se integra con Azure Functions.
+* En GitHub tenemos las GitHub Actions que realizan la tarea de generar la web estática en base al repositorio que hayamos proporcionado y desplegarla automáticamente a nuestro sitio estático. Para esta tarea en concreto podemos encontrar la acción [Azure/static-web-apps-deploy](https://github.com/Azure/static-web-apps-deploy) que utiliza una utilidad llamada [Oryx](https://github.com/microsoft/Oryx) que permite detectar automáticamente el lenguaje y compilar un repositorio. Si os fijáis en las plataformas que soporta son: dotnet, nodejs, php y python. Pero también es capaz de generar sitios estáticos a partir de HUGO (usando 0.59) e incluso sitios creados en múltiples lenguajes como Django+React.
+
+El script de la acción de compilación y despliegue, en el caso de que no encuentre código a compilar simplemente desplegará lo que encuentre en la carpeta que le hayamos indicado, por eso en el [ejemplo oficial](https://docs.microsoft.com/es-es/azure/static-web-apps/publish-hugo) modifican los pasos de la acción para generar el sitio y así poder utilizar la última versión en lugar de la que tiene Oryx internamente:
+
+``` yaml
+    - name: Setup Hugo
+      uses: peaceiris/actions-hugo@v2.4.8
+      with:
+        hugo-version: "latest"
+    - name: Build
+      run: hugo
+```
+
+Y esto es todo por hoy.
+Saludos confinados!
 
 [repo-create]: /desplegar-un-blog-hugo/createrepo.png "Crea un repositorio en GitHub"
 [hugo-create]: /desplegar-un-blog-hugo/createhugofirstpost.png "Crea el primer post con hugo"
