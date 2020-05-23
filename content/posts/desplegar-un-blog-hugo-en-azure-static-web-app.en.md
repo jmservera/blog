@@ -10,7 +10,7 @@ It's been over 5 years since I don't write on my personal blog, and since then I
 > **Disclaimer**: there is an advanced tutorial with a custom HUGO build here: https://docs.microsoft.com/en-us/azure/static-web-apps/publish-hugo
 
 ## Blog creation
-
+//todo
 Debo confesar que soy un completo novato en esto de los blogs estáticos. Usé [Wordpress](https://jmservera.wordpress.com) durante muchos años, pero es verdad que 5 años más tarde todo ha cambiado y utilizo [Markdown](https://daringfireball.net/projects/markdown/) hasta para mis recetas de cocina, así que esto no puede ser tan difícil. Como este artículo no va de cómo crear un blog tenéis una guía fantástica en la web de [HUGO](https://gohugo.io/getting-started/quick-start/). Vamos a realizar los pasos básicos:
 
 1. Para poder integrar nuestro sitio estático con la generación del blog, necesitamos que nuestro código este en GitHub, así que creamos un repositorio para nuestro blog:
