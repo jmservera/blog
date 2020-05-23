@@ -27,9 +27,18 @@ Resumo los pasos básicos:
   ![Usamos Hugo para crear un blog con un tema][hugo-create]
   Podéis ver que he hecho lo siguiente:
   1. He clonado el repositorio
-  2. He creado un nuevo sitio con HUGO: ```hugo new site blog_es```
-  3. He añadido el tema bootstrap-4 usando: ```git submodule add https://github.com/alanorth/hugo-theme-bootstrap4-blog themes/bootsrap4-blog```
-  4. He aplicado el tema y he creado este post con ```hugo new posts/desplegar-un-blog-hugo-en-azure-static-web-app```
+  2. He creado un nuevo sitio con HUGO: 
+  ``` bash
+    hugo new site blog_es
+  ```
+  3. He añadido el tema bootstrap-4 usando: 
+  ``` bash
+    git submodule add https://github.com/alanorth/hugo-theme-bootstrap4-blog themes/bootsrap4-blog 
+  ```
+  4. He aplicado el tema y he creado este post con:
+  ``` bash
+    hugo new posts/desplegar-un-blog-hugo-en-azure-static-web-app
+  ```
 
 ## Despliegue de nuestro blog en Azure Static Web App
 
@@ -75,7 +84,7 @@ El script de la acción de compilación y despliegue, en el caso de que no encue
       run: hugo
 ```
 
-Y esto es todo por hoy.
+Y esto es todo por hoy, ahora me queda encontrar una [buena plantilla](https://themes.gohugo.io/) para el blog.
 Saludos confinados!
 
 [repo-create]: /desplegar-un-blog-hugo/createrepo.png "Crea un repositorio en GitHub"
