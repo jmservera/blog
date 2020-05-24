@@ -1,5 +1,5 @@
 ---
-title: "Desplegar un blog Hugo en Azure Static Web App"
+title: "Desplegar un blog HUGO en Azure Static Web App"
 featured_image: "/images/1500x500.jfif"
 date: 2020-05-21T23:24:26+02:00
 draft: false
