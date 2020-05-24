@@ -7,7 +7,7 @@ draft: false
 
 The past 19th of this month, while I was watching the [Static Web App](https://mybuild.microsoft.com/sessions/898230c4-1350-4fc6-acba-6baf1a58d76a?source=sessions) Build presentation, I decided to do a test with [HUGO](https://gohugo.io) to start again my blog after 5 years of silence.
 
-TL;DR: [Static Web Apps](https://docs.microsoft.com/azure/static-web-apps/) allows you to deploy static content with a custom domain and Azure Web Apps does the rest: creates a GitHub Action for continuous deployment, gives you a SSL certificate for your custom domain, does the global distribution and helps you with Azure Functions if you need to generate some content from an API. Best of all, all for FREE, even the certificate for your site.
+TL;DR: [Static Web Apps](https://docs.microsoft.com/azure/static-web-apps/) allows you to deploy static content with a custom domain and Azure Web Apps does the rest: creates a GitHub Action for continuous deployment, gives you an SSL certificate for your custom domain, does the global distribution and helps you with Azure Functions if you need to generate some content from an API. Best of all, all for FREE, even the certificate for your site.
 
 <!--more-->
 
@@ -15,9 +15,9 @@ TL;DR: [Static Web Apps](https://docs.microsoft.com/azure/static-web-apps/) allo
 
 ## Blog creation
 
-I must confess, I'm a total rookie with static blogs. I used [Wordpress](https://jmservera.wordpress.com) during so many years, but this last 5 years everything changed and I'm using [Markdown](https://daringfireball.net/projects/markdown/) even for my cooking recipes, so this shouldn't be too hard. This article is not about blogging, so you have an awesome guide on how to tart in the [HUGO](https://gohugo.io/getting-started/quick-start/) website. Let's summarize the basic steps:
+I must confess, I'm a total rookie with static blogs. I used [Wordpress](https://jmservera.wordpress.com) for so many years, but this last 5 years everything changed and I'm using [Markdown](https://daringfireball.net/projects/markdown/) even for my cooking recipes, so this shouldn't be too hard. This article is not about blogging, so you have an awesome guide on how to start in the [HUGO](https://gohugo.io/getting-started/quick-start/) website. Let's summarize the basic steps:
 
-1. First we will need a GitHub repo to integrate it with Azure:
+1. First, we will need a GitHub repo to integrate it with Azure:
   ![Creación del repositorio en GitHub][repo-create]
 
 2. Then we create a simple blog with the [hugo](https://gohugo.io) CLI. See in the picture the basic steps:
@@ -30,7 +30,7 @@ I must confess, I'm a total rookie with static blogs. I used [Wordpress](https:/
     ```
     hugo new site blog_es --force
     ```
-  3. I added a them as a submodule:
+  3. I added a theme as a submodule:
     ```
     git submodule add https://github.com/alanorth/hugo-theme-bootstrap4-blog themes/bootsrap4-blog
     ```
@@ -69,8 +69,8 @@ After the push the blog will finally deploy into our static web app:
 
 The magic behind this is supported by two different systems:
 
-* Azure provides all the infrastructure from the already existing App Services, like Custom domains, deployment slots (called Environments), authentication and role authorization, routes and Azure Functions integration for a stateless API.
-* GitHub has the GitHub Actions system that takes care of the static web content generation from your repo, and then do the automated deployment to the static web app. For this task, you can take a look to the [Azure/static-web-apps-deploy](https://github.com/Azure/static-web-apps-deploy) repo where you will see how a tool named Oryx is used. This tool detects the language and builds your repo. The supported platforms are: dotnet, nodejs, php and python, but can also generate static web apps from HUGO 0.59 or multilanguage sites like Django + React.
+* Azure provides all the infrastructure from the already existing App Services, like Custom domains, deployment slots (called Environments), authentication and role authorization, routes, and Azure Functions integration for a stateless API.
+* GitHub has the GitHub Actions system that takes care of the static web content generation from your repo, and then do the automated deployment to the static web app. For this task, you can take a look to the [Azure/static-web-apps-deploy](https://github.com/Azure/static-web-apps-deploy) repo where you will see how a tool named Oryx is used. This tool detects the language and builds your repo. The supported platforms are: .Net, Nodejs, PHP, and Python, but can also generate static web apps from HUGO 0.59 or multilanguage sites like Django + React.
 
 If the build and deploy script does not find something to build, it will deploy whatever is found in the main folder, with the condition that an index page is present in the folder. That's why the official example adds some extra steps to use a newer version of HUGO:
 
