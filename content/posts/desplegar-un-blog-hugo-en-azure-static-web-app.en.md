@@ -1,67 +1,75 @@
 ---
-title: "How to deploy an HUGO site in Azure Static Web App"
+title: "How to deploy a HUGO site in Azure Static Web App"
 featured_image: "/images/1500x500.jfif"
 date: 2020-05-21T23:24:26+02:00
 draft: false
 ---
 
-The past 19th of this month, while I was watching the [Static Web App](https://mybuild.microsoft.com/sessions/898230c4-1350-4fc6-acba-6baf1a58d76a?source=sessions) Build presentation, I decided to do a test with [HUGO](https://gohugo.io) to start again my blog after 5 years of silence.
+This past May 19th, while I was watching the [Static Web App](https://mybuild.microsoft.com/sessions/898230c4-1350-4fc6-acba-6baf1a58d76a?source=sessions) Build presentation, I decided to do a test with [HUGO](https://gohugo.io) to start again my blog after 5 years of silence.
 
-TL;DR: [Static Web Apps](https://docs.microsoft.com/azure/static-web-apps/) allows you to deploy static content with a custom domain and Azure Web Apps does the rest: creates a GitHub Action for continuous deployment, gives you an SSL certificate for your custom domain, does the global distribution and helps you with Azure Functions if you need to generate some content from an API. Best of all, all for FREE, even the certificate for your site.
+TL;DR: [Static Web Apps](https://docs.microsoft.com/azure/static-web-apps/) allows you to deploy static content with a custom domain and Azure Web Apps does the rest: creates a GitHub Action for continuous deployment, gives you an SSL certificate for your custom domain, does the global distribution and helps you with Azure Functions if you need to generate some content from an API. Best of all, it's all for FREE, you even get a free SSL certificate for your site's custom domain.
 
 <!--more-->
 
 > **Disclaimer**: I did this before reading the [official tutorial](https://docs.microsoft.com/azure/static-web-apps/publish-hugo) where you will find an advanced step-by-step guide for a customized HUGO deployment.
 
-## Blog creation
+## First, you need a blog
 
-I must confess, I'm a total rookie with static blogs. I used [Wordpress](https://jmservera.wordpress.com) for so many years, but this last 5 years everything changed and I'm using [Markdown](https://daringfireball.net/projects/markdown/) even for my cooking recipes, so this shouldn't be too hard. This article is not about blogging, so you have an awesome guide on how to start in the [HUGO](https://gohugo.io/getting-started/quick-start/) website. Let's summarize the basic steps:
+I must confess I'm a total noobie with static blogs. I used [WordPress](https://jmservera.wordpress.com) for so many years, but this last 5 years everything changed and I'm using [Markdown](https://daringfireball.net/projects/markdown/) even for my cooking recipes, so this shouldn't be too hard. This article is not about blogging, and you have an awesome guide on how to start on the [HUGO](https://gohugo.io/getting-started/quick-start/) website. But, let's summarize the basic steps:
 
-1. First, we will need a GitHub repo to integrate it with Azure:
-  ![Creación del repositorio en GitHub][repo-create]
+1. First, we will need a Git repo, this is how HUGO works and Azure Static Web Apps uses GitHub to link your repo, so here we go:
+  ![GitHub repository creation][repo-create]
 
-2. Then we create a simple blog with the [hugo](https://gohugo.io) CLI. See in the picture the basic steps:
-  ![Usamos Hugo para crear un blog con un tema][hugo-create]
+2. Then we create a simple blog with the [HUGO](https://gohugo.io) CLI. See in this picture my basic steps:
 
-  What I've done is:
+   ![Use HUGO to create a blog][HUGO-create]
 
-  1. I cloned the repo
-  2. I created a HUGO new site:
-    ```
-    hugo new site blog_es --force
-    ```
-  3. I added a theme as a submodule:
-    ```
-    git submodule add https://github.com/alanorth/hugo-theme-bootstrap4-blog themes/bootsrap4-blog
-    ```
-  4. And after applying the theme I created a new post
-    ```
-    hugo new posts/desplegar-un-blog-hugo-en-azure-static-web-app
-    ```
+   What I've done is:
+
+   1) I cloned the *almost* empty repo
+   1) Then I created a new site with HUGO:
+
+        ```bash
+        hugo new site blog_es --force
+        ```
+
+   1) The theme is added as a submodule:
+
+      ```bash
+      git submodule add https://github.com/alanorth/hugo-theme-bootstrap4-blog themes/bootsrap4-blog
+      ```
+
+   1) And, finally, I created this post:
+
+      ```bash
+      hugo new posts/desplegar-un-blog-hugo-en-azure-static-web-app
+      ```
+
+After these steps we have a plain and simple blog that we can edit and test locally.
 
 ## Deploy our new blog in Azure Static Web App
 
-Once we have our new blog prepared and pushed to GitHub we create in Azure a new [Static Web App](https://azure.microsoft.com/services/app-service/static/).
+Once we have pushed the blog to GitHub, we create in Azure a new [Static Web App](https://azure.microsoft.com/services/app-service/static/).
 
-![Creación de la Static Web App][webapp-create]
+![Static Web App Creation][WEBAPP-create]
 
-We will need to configure our new GitHub credentials:
+We will need to configure our GitHub credentials:
 
-![Configuración de la web][webapp-config]
+![Web app configuration][WEBAPP-config]
 
-We will need to change the App artifact location to *public*, the folder where HUGO creates the output:
+And change the App artifact location to "*public*", the folder where HUGO creates the output:
 
-![Configurar dónde buscará la GitHub Action el contenido][webapp-config-artifact]
+![Change where the GitHub Action will search for content][WEBAPP-config-artifact]
 
-And this will create for us a [GitHub Action](https://github.com/features/actions) that will generate and deploy our blog in our web app, but the first deployment will fail. You will remember that I used a submodule for the HUGO theme, so, we will need to modify the *checkout* action to force the download of the submodule. in the *.github/workflows* folder there's a *.yml* file that we will need to modify in the checkout action: 
+And this will automagically create a [GitHub Action](https://github.com/features/actions) that will generate and deploy our blog in our web app. The first deployment will fail because I used a submodule for the HUGO theme and this is missing by now, so, we will need to modify the *checkout* action to force the download of the submodule. In the *.github/workflows* folder there's a *.yml* file that we will need to modify in the checkout step:
 
-``` yaml
-    - uses: actions/checkout@v2
-      with:
-        submodules: true
+```yml
+- uses: actions/checkout@v2
+  with:
+    submodules: true
 ```
 
-After the push the blog will finally deploy into our static web app:
+Pushing these changes will run the action again that will now deploy our blog into our static web app:
 
 ![Blog picture][blog-picture]
 
@@ -69,29 +77,31 @@ After the push the blog will finally deploy into our static web app:
 
 The magic behind this is supported by two different systems:
 
-* Azure provides all the infrastructure from the already existing App Services, like Custom domains, deployment slots (called Environments), authentication and role authorization, routes, and Azure Functions integration for a stateless API.
-* GitHub has the GitHub Actions system that takes care of the static web content generation from your repo, and then do the automated deployment to the static web app. For this task, you can take a look to the [Azure/static-web-apps-deploy](https://github.com/Azure/static-web-apps-deploy) repo where you will see how a tool named Oryx is used. This tool detects the language and builds your repo. The supported platforms are: .Net, Nodejs, PHP, and Python, but can also generate static web apps from HUGO 0.59 or multilanguage sites like Django + React.
+* **Azure** provides all the infrastructure. As my colleague [@CJ_Aliaga](https://twitter.com/CJ_Aliaga) told me, all this systems already existed before: Custom domains integration, SSL, deployment slots (called Environments), authentication and role authorization, routes, and Azure Functions integration for a stateless API.
+* **GitHub Actions** system that takes care of the static web content generation from your repo, and then do the automated deployment to the static web app. You can see how it's done in the [Azure/static-web-apps-deploy](https://github.com/Azure/static-web-apps-deploy) repo, where you will find how a tool named [Oryx](https://github.com/microsoft/Oryx) is used. This tool detects the language and builds your repo when it is created in one of the supported platforms: .Net, Nodejs, PHP, and Python. It can also generate static web apps from HUGO 0.59, and also supports sites using a combination of programming languages like, for example, Django + React.
 
-If the build and deploy script does not find something to build, it will deploy whatever is found in the main folder, with the condition that an index page is present in the folder. That's why the official example adds some extra steps to use a newer version of HUGO:
+If the build and deploy script does not find something to build, but it finds an index page in the main folder, it will deploy whatever is found there. That is why the official example adds some extra steps to use a newer version of HUGO:
 
 ``` yaml
-    - name: Setup Hugo
-      uses: peaceiris/actions-hugo@v2.4.8
-      with:
-        hugo-version: "latest"
-    - name: Build
-      run: hugo
+- name: Setup Hugo
+  uses: peaceiris/actions-hugo@v2.4.8
+  with:
+    hugo-version: "latest"
+- name: Build
+  run: hugo
 ```
 
-And thats all folks. Now I have to search for a good [theme template](https://themes.gohugo.io/) for my blog.
+This means that **you can use any static site generator** that can be run from the command line.
 
-[repo-create]: /desplegar-un-blog-hugo/createrepo.png "Crea un repositorio en GitHub"
-[hugo-create]: /desplegar-un-blog-hugo/createhugofirstpost.png "Crea el primer post con hugo"
+And that's all folks. Now I have to search for a good [theme template](https://themes.gohugo.io/) for my blog. See you around.
 
-[webapp-create]: /desplegar-un-blog-hugo/createstaticwebapp.png "Crea una web app estática"
+[repo-create]: /desplegar-un-blog-hugo/createrepo.png "GitHub repository creation"
+[HUGO-create]: /desplegar-un-blog-hugo/createhugofirstpost.png "Create the first post with HUGO"
 
-[webapp-config]: /desplegar-un-blog-hugo/createstaticwebapp_2.png "Configurar repositorio de GitHub"
+[WEBAPP-create]: /desplegar-un-blog-hugo/createstaticwebapp.png "Crete a Static Web App"
 
-[webapp-config-artifact]: /desplegar-un-blog-hugo/createstaticwebapp_3.png "Configurar carpeta public como output de hugo"
+[WEBAPP-config]: /desplegar-un-blog-hugo/createstaticwebapp_2.png "Configure the GitHub repository link"
 
-[blog-picture]: /desplegar-un-blog-hugo/blogpicture_en.png "Blog picture"
+[WEBAPP-config-artifact]: /desplegar-un-blog-hugo/createstaticwebapp_3.png "Configurate the public folder as the output from HUGO"
+
+[blog-picture]: /desplegar-un-blog-hugo/blogpicture_en.png "Picture of this blog post"
