@@ -1,11 +1,10 @@
 DefaultContentLanguage = "es"
 baseURL = "https://jmblog.servezas.org"
-linkedin = "https://www.linkedin.com/in/jmservera/"
-github = "https://github.com/jmservera"
 theme = "ananke"
 enableGitInfo = true
 paginate = 5
 enableRobotsTXT = true
+copyright="Juan Manuel Servera"
 
 staticDir = ["static","static_en"]
 
@@ -19,7 +18,7 @@ staticDir = ["static","static_en"]
     github = "https://github.com/jmservera"
     linkedin = "https://linkedin.com/in/jmservera"
     stackoverflow = "https://stackoverflow.com/users/107102/jmservera"
-    featured_image = "/images/1500x500.jfif"
+    featured_image = "/images/1500x500.jfif"    
 
 [languages]
     [languages.es]
