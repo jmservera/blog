@@ -5,6 +5,7 @@ enableGitInfo = true
 paginate = 5
 enableRobotsTXT = true
 copyright="Juan Manuel Servera"
+googleAnalytics="UA-29316797-3"
 
 staticDir = ["static","static_en"]
 
