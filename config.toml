@@ -26,7 +26,6 @@ staticDir = ["static","static_en"]
         languageCode = "es-es"
         languageName = "Español"
         title = "Dev-o-Mático 2000"
-        theme = "bootstrap4-blog"
         weight = 1
     [languages.en]
         languageCode = "en-us"
