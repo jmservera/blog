@@ -1,10 +1,10 @@
 +++
-title =  "Cómo montar un servicio de video chat"
+title =  "How to create a video chat service"
 date = 2020-06-24T10:25:22+02:00
 tags = ["Azure","WebRTC","TURN","PoC","ARM Templates"]
 featured_image = "https://live.staticflickr.com/207/515106921_a83de99560_o.jpg"
-description = "Si Doug pudo en 1968 tú también puedes"
-draft = false
+description = "If Doug could in 1968 you can"
+draft = true
 +++
 
 
