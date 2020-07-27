@@ -1,9 +1,10 @@
----
-title: "How to deploy a HUGO site in Azure Static Web App"
-featured_image: "/images/1500x500.jfif"
-date: 2020-05-21T23:24:26+02:00
-draft: false
----
++++
+title= "How to deploy a HUGO site in Azure Static Web App"
+featured_image= "/images/1500x500.jfif"
+date= 2020-05-21T23:24:26+02:00
+tags= ["Azure"]
+draft= false
++++
 
 This past May 19th, while I was watching the [Static Web App](https://mybuild.microsoft.com/sessions/898230c4-1350-4fc6-acba-6baf1a58d76a?source=sessions) Build presentation, I decided to do a test with [HUGO](https://gohugo.io) to start again my blog after 5 years of silence.
 

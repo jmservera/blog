@@ -1,9 +1,10 @@
----
-title: "Desplegar un blog HUGO en Azure Static Web App"
-featured_image: "/images/1500x500.jfif"
-date: 2020-05-21T23:24:26+02:00
-draft: false
----
++++
+title= "Desplegar un blog HUGO en Azure Static Web App"
+featured_image= "/images/1500x500.jfif"
+date= 2020-05-21T23:24:26+02:00
+tags= ["Azure"]
+draft= false
++++
 
 El pasado día 19, mientras estaba mirando la presentación de las [Static Web App](https://mybuild.microsoft.com/sessions/898230c4-1350-4fc6-acba-6baf1a58d76a?source=sessions) en el *Microsoft Build*, se me ocurrió hacer una prueba con [HUGO](https://gohugo.io) para ver si soy capaz de retomar mi blog tras 5 años de inactividad.
 
