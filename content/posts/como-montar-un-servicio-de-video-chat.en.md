@@ -9,7 +9,7 @@ draft = false
 
 I believe I live in modern times until I realize that in the '60s you could already [buy a videoconferencing system][pinkponk], and you could meet Douglas Engelbart in a [mind-blowing demo in 1968][motherofalldemos].
 ![Douglas Engelbart performance in "The mother of all demos"](/como-montar-videochat/engelbartdemo.png "Doug's shopping list demo")
-So, now that we have advanced in the XXI century, how hard should be to create a private video chat using a serverless WebRTC app, just like Western Electric could have announced sixty years ago? As usual, it's not completely easy, and you need to overcome some problems to do the P2P connection.
+So, now that we have advanced in the XXI century, how hard should it be to create a private video chat using a serverless WebRTC app, just like Western Electric could have announced sixty years ago? As usual, it's not completely easy, and you need to overcome some problems to do the P2P connection.
 
 ## WebRTC
 
