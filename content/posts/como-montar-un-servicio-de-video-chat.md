@@ -9,7 +9,7 @@ draft = false
 
 
 Aunque nos parezca algo muy moderno, en los años 60 ya se empezaban a comercializar los [primeros sistemas de videoconferencia][pinkponk], y existía gente como Douglas Engelbart que te hacía [explotar la cabeza en el 68 con sus demos][motherofalldemos].
-![Douglas Engelbart haciendo "La madre de todas las demos"](/como-montar-videochat/engelbartdemo.png "La demo de la lista de la compra de Doug")
+![Douglas Engelbart haciendo "La madre de todas las demos"](/como-montar-videochat/engelbartdemo.jpg "La demo de la lista de la compra de Doug")
 Ya avanzado el siglo XXI ¿Cómo de difícil sería montarnos un videochat privado usando WebRTC serverless tal como anunciaba Western Electric? Como suele ocurrir, ni es tan sencillo, ni es verdad que se pueda hacer una conexión P2P fácilmente entre dos puntos.
 
 ## WebRTC
