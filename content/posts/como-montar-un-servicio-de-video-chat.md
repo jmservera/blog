@@ -3,7 +3,7 @@ title =  "Cómo montar un servicio de videochat"
 date = 2020-07-28T10:25:22+02:00
 tags = ["Azure","WebRTC","TURN","PoC","ARM Templates"]
 featured_image = "https://live.staticflickr.com/207/515106921_a83de99560_o.jpg"
-description = "Si Doug pudo en 1968 tú también puedes"
+description = "Si Doug pudo en 1968, tú también puedes"
 draft = false
 +++
 

@@ -3,7 +3,7 @@ title =  "How to create a video chat service"
 date = 2020-07-28T10:25:22+02:00
 tags = ["Azure","WebRTC","TURN","PoC","ARM Templates"]
 featured_image = "https://live.staticflickr.com/207/515106921_a83de99560_o.jpg"
-description = "If Doug could in 1968 you can"
+description = "If Doug could in 1968, you can"
 draft = false
 +++
 
