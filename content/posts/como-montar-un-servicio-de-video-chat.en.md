@@ -3,17 +3,17 @@ title =  "How to create a video chat service"
 date = 2020-07-28T10:25:22+02:00
 tags = ["Azure","WebRTC","TURN","PoC","ARM Templates"]
 featured_image = "https://live.staticflickr.com/207/515106921_a83de99560_o.jpg"
-description = "If Doug could in 1968, you can"
+description = "If Doug could in 1968, you can too"
 draft = false
 +++
 
 I believe I live in modern times until I realize that in the '60s you could already [buy a videoconferencing system][pinkponk], and you could meet Douglas Engelbart in a [mind-blowing demo in 1968][motherofalldemos].
-![Douglas Engelbart performance in "The mother of all demos"](/como-montar-videochat/engelbartdemo.png "Doug's shopping list demo")
+![Douglas Engelbart's performance in "The mother of all demos"](/como-montar-videochat/engelbartdemo.png "Doug's shopping list demo")
 So, now that we have advanced in the XXI century, how hard should it be to create a private video chat using a serverless WebRTC app, just like Western Electric could have announced sixty years ago? As usual, it's not completely easy, and you need to overcome some problems to do the P2P connection.
 
 ## WebRTC
 
-Nowadays, inside our browser we have the technology that allows us to create a communication channel between two remote browsers, i.e., we can send data between two client applications without the need of a server, under [ideal conditions][spherical_cow]. For example, we could build a simple solution like the one seen in the post [WebRTC and Node.js][webrtcdemo] and we could have a rather functional video chat app. After following the guide and [updating some libraries][videochatgit], it will work if you use it in your local network, but once you test it in unrelated networks over the internet you will have a lot of trouble to connect, and the application will probably fail.
+Nowadays, inside our browser we have the technology that allows us to create a communication channel between two remote browsers, i.e., we can send data between two client applications without the need of a server, under [ideal conditions][spherical_cow]. For example, we could build a simple solution like the one seen in the post [WebRTC and Node.js][webrtcdemo] and we could have a rather functional video chat app. After following the guide and [updating some libraries][videochatgit], it will work if you use it in your local network, but once you test it in unrelated networks over the internet you will have a lot of trouble connecting, and the application will probably fail.
 
 [![India, Delhi - Indian-style cable spaghetti - February 2018 by Cyprien Hauser](https://live.staticflickr.com/65535/49204696853_6df9abbc5c_c.jpg)](https://flic.kr/p/2hY3W7i "Where's Wally wire edition?")
 
@@ -25,7 +25,7 @@ What's happening here is that between the two distant points there will be proba
 
 ## Show me the code
 
-> If you prefer to read JSON instead of this boring text, check the Github repos directly: the [deployment template][videochatgit] and [the web app][webappgit]
+> If you prefer to read JSON instead of this boring text, check the GitHub repos directly: the [deployment template][videochatgit] and [the web app][webappgit]
 
 As the articles above explain, it looks like we will need a streaming server after all. Even though it is only needed when the two browsers cannot establish a direct connection,
 you usually do a video call with people out of your local network and most of the time we will need to use a TURN server. The good news is that it already exists an OSS project that deploys a TURN / STUN / ICE server called [coturn][coturngit], and it's also available as an [Ubuntu package][coturn]; the bad news is that for production environments this will be expensive, as you will need a big and scalable infrastructure to maintain it.
@@ -91,7 +91,7 @@ sudo systemctl start coturn
 sudo certbot certonly --standalone --deploy-hook "systemctl restart coturn" -d $3 --agree-tos --no-eff-email --register-unsafely-without-email
 ```
 
-This script will run from an [Azure Resource Manager template][turnserverdeploy], where we will ask for the user and password through the template parameters, and we will also get the full server name and IP address from the deployment:
+This script will run from an [Azure Resource Manager template][turnserverdeploy], where we will ask for the user and password through the template parameters, and we will also get the full server name and the IP address from the deployment:
 
 ```json
 "commandToExecute": "[concat('sh installturn.sh ''',parameters('turnAdmin'),''' ''',
@@ -118,7 +118,7 @@ var script: string = data.toString().replace('{{ice_config}}',
                                   util.inspect (ice_config));
 ```
 
-So, in the [deployment template][webappgit], I added the URL for the web app repo, this will make the App Service get it from Github and then compile the full project into a container and run it:
+So, in the [deployment template][webappgit], I added the URL for the web app repo, this will make the App Service get it from GitHub and then compile the full project into a container and run it:
 
 ```json
 "properties": {

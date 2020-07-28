@@ -8,7 +8,7 @@ draft = false
 +++
 
 
-Aunque nos parezca algo muy moderno, en los años 60 ya se empezaban a comercializar los [primeros sistemas de videoconferencia][pinkponk], y ya había gente como Douglas Engelbart que te hacía [explotar la cabeza en el 68 con sus demos][motherofalldemos].
+Aunque nos parezca algo muy moderno, en los años 60 ya se empezaban a comercializar los [primeros sistemas de videoconferencia][pinkponk], y existía gente como Douglas Engelbart que te hacía [explotar la cabeza en el 68 con sus demos][motherofalldemos].
 ![Douglas Engelbart haciendo "La madre de todas las demos"](/como-montar-videochat/engelbartdemo.png "La demo de la lista de la compra de Doug")
 Ya avanzado el siglo XXI ¿Cómo de difícil sería montarnos un videochat privado usando WebRTC serverless tal como anunciaba Western Electric? Como suele ocurrir, ni es tan sencillo, ni es verdad que se pueda hacer una conexión P2P fácilmente entre dos puntos.
 
@@ -26,7 +26,7 @@ Esto ocurre porque entre los dos puntos seguramente haya firewalls, NAT, algunos
 
 ## Show me the code
 
-> Si prefieres leer JSON en lugar de este texto aburrido, puedes ver los dos repositorios de Github: la [plantilla de despliegue][videochatgit] y [la aplicación web][webappgit]
+> Si prefieres leer JSON en lugar de este texto aburrido, puedes ver los dos repositorios de GitHub: la [plantilla de despliegue][videochatgit] y [la aplicación web][webappgit]
 
 Tal como explican los artículos, al parecer sí que necesitamos un servidor de streaming. Aunque en principio es sólo "por si acaso" los dos navegadores no pueden establecer una conexión directa, la mayor parte de las veces tendremos que recurrir al servidor TURN. La buena noticia es que existe un proyecto open source que despliega un servidor TURN / STUN / ICE llamado [coturn][coturngit] y ni siquiera lo tenemos que compilar porque ya está disponible como [paquete para Ubuntu][coturn], la mala es que, para escenarios de producción, esto saldrá bastante caro, pues necesitarás una infraestructura potente que además permita escalar horizontalmente.
 
@@ -118,7 +118,7 @@ var script: string = data.toString().replace('{{ice_config}}',
                                   util.inspect (ice_config));
 ```
 
-En la [plantilla de despliegue][webappgit] he añadido la URL del repositorio donde está la aplicación, para que se despliegue automáticamente:
+En la [plantilla de despliegue][webappgit] he añadido la URL del repositorio de GitHub donde está la aplicación, para que se despliegue automáticamente:
 
 ```json
 "properties": {
