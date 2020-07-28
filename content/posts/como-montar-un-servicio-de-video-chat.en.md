@@ -19,9 +19,9 @@ Nowadays, inside our browser we have the technology that allows us to create a c
 
 What's happening here is that between the two distant points there will be probably a bunch of firewalls, NAT, proxies, and lots of other arcane network stuff that prevents you from having a direct connection between the two browsers. There are lots of written words about why and how this works, so I let you some bibliography about the problems and their solutions below:
 
-* [STUN, o Session Traversal Utilities for NAT][STUN], it's the toolset we need to allow two remote clients to meet through the Real World&trade; network mess.
-* [TURN Server, o Traversal Using Relays around NAT][TURN], when STUN is not enough, you need a proxy to stream the video between the two points.
-* [ICE, Interactive Connectivity Establishment][ICE], it's the way WebRTC has to decide whether STUN or TURN should be used.
+* [Session Traversal Utilities for NAT (STUN)][STUN], it's the toolset we need to allow two remote clients to meet through the Real World&trade; network mess.
+* [Traversal Using Relays around NAT (TURN)][TURN], when STUN is not enough, you need a proxy to stream the video between the two points.
+* [Interactive Connectivity Establishment (ICE)][ICE], it's the way WebRTC has to decide whether STUN or TURN should be used.
 
 ## Show me the code
 
