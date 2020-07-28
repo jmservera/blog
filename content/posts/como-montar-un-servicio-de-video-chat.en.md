@@ -160,7 +160,7 @@ And this is the way we can fully automate the deployment of a complete solution.
 
 You can see the [full example in the git repo][videochatgit] and test it directly in your Azure subscription by clicking the button below:
 
-[![Deploy to Azure](http://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fjmservera%2Fvideochat%2Fmain%2Fazuredeploy.json)
+[![Deploy to Azure](https://azuredeploy.net/deploybutton.png)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fjmservera%2Fvideochat%2Fmain%2Fazuredeploy.json)
 
 ## Credits
 
