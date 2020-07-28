@@ -25,6 +25,8 @@ What's happening here is that between the two distant points there will be proba
 
 ## Show me the code
 
+> If you prefer to read JSON instead of this boring text, check the Github repos directly: the [deployment template][videochatgit] and [the web app][webappgit]
+
 As the articles above explain, it looks like we will need a streaming server after all. Even though it is only needed when the two browsers cannot establish a direct connection,
 you usually do a video call with people out of your local network and most of the time we will need to use a TURN server. The good news is that it already exists an OSS project that deploys a TURN / STUN / ICE server called [coturn][coturngit], and it's also available as an [Ubuntu package][coturn]; the bad news is that for production environments this will be expensive, as you will need a big and scalable infrastructure to maintain it.
 

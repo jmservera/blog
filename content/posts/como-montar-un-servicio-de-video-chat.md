@@ -26,6 +26,8 @@ Esto ocurre porque entre los dos puntos seguramente haya firewalls, NAT, algunos
 
 ## Show me the code
 
+> Si prefieres leer JSON en lugar de este texto aburrido, puedes ver los dos repositorios de Github: la [plantilla de despliegue][videochatgit] y [la aplicación web][webappgit]
+
 Tal como explican los artículos, al parecer sí que necesitamos un servidor de streaming. Aunque en principio es sólo "por si acaso" los dos navegadores no pueden establecer una conexión directa, la mayor parte de las veces tendremos que recurrir al servidor TURN. La buena noticia es que existe un proyecto open source que despliega un servidor TURN / STUN / ICE llamado [coturn][coturngit] y ni siquiera lo tenemos que compilar porque ya está disponible como [paquete para Ubuntu][coturn], la mala es que, para escenarios de producción, esto saldrá bastante caro, pues necesitarás una infraestructura potente que además permita escalar horizontalmente.
 
 Desplegar esto en Azure es relativamente sencillo. La aplicación web la desplegaremos en [Azure App Service][appservice], que ya nos permitirá la alta disponibilidad, gestión de certificados e incluso podremos gestionar la seguridad de acceso usando [Azure Active Directory][aad] con muy pocos cambios en nuestra solución y que veremos en otro artículo más adelante. El servidor TURN podríamos desplegarlo en [Azure Container Instance][aci], pero para que funcione al 100% necesitamos que responda tanto en UDP como en TCP y eso todavía no está soportado en ACI, así que lo desplegaremos en una [Máquina Virtual][vm] con un script de inicio.
