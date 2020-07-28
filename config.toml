@@ -2,7 +2,7 @@ DefaultContentLanguage = "es"
 baseURL = "https://jmblog.servezas.org"
 theme = "ananke"
 enableGitInfo = true
-paginate = 5
+paginate = 30
 enableRobotsTXT = true
 copyright="Juan Manuel Servera"
 googleAnalytics="UA-29316797-3"
@@ -20,6 +20,8 @@ staticDir = ["static","static_en"]
     linkedin = "https://linkedin.com/in/jmservera"
     stackoverflow = "https://stackoverflow.com/users/107102/jmservera"
     featured_image = "/images/1500x500.jfif"    
+    show_reading_time = true
+    tags = ["Azure", "DevOps", "AI"]
 
 [languages]
     [languages.es]

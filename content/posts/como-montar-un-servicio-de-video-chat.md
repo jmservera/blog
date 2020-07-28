@@ -1,6 +1,6 @@
 +++
 title =  "Cómo montar un servicio de videochat"
-date = 2020-06-24T10:25:22+02:00
+date = 2020-07-28T10:25:22+02:00
 tags = ["Azure","WebRTC","TURN","PoC","ARM Templates"]
 featured_image = "https://live.staticflickr.com/207/515106921_a83de99560_o.jpg"
 description = "Si Doug pudo en 1968 tú también puedes"
@@ -18,7 +18,7 @@ Hoy en día, tenemos en nuestro navegador la tecnología que nos permite comunic
 
 [![India, Delhi - Indian-style cable spaghetti - February 2018 by Cyprien Hauser](https://live.staticflickr.com/65535/49204696853_6df9abbc5c_c.jpg)](https://flic.kr/p/2hY3W7i "A ver si encuentras qué cable es el tuyo")
 
-Esto ocurre porque entre los dos puntos seguramente haya firewalls, NAT, algunos proxies y muchas otras cosas que impiden una conexión directa. Ya existen suficientes artículos que explican cómo funciona, así que no me voy a extender demasiado en los detalles y os dejo unos enlaces a los problemas y su soluciones:
+Esto ocurre porque entre los dos puntos seguramente haya firewalls, NAT, algunos proxies y muchas otras cosas que impiden una conexión directa. Ya existen suficientes artículos que explican cómo funciona, así que no me voy a extender demasiado en los detalles y os dejo unos enlaces a los problemas y sus soluciones:
 
 * [STUN, o Session Traversal Utilities for NAT][STUN], es el conjunto de herramientas que necesitaremos para que los dos clientes remotos puedan encontrarse a través de la maraña de redes del Mundo Real&trade;.
 * [TURN Server, o Traversal Using Relays around NAT][TURN], cuando STUN no es suficiente necesitaremos que un servidor haga de intermediario.
