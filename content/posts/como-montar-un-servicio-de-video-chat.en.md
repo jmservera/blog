@@ -25,10 +25,10 @@ What's happening here is that between the two distant points there will be proba
 
 ## Show me the code
 
-As the articles shown explain, it looks like we will need a streaming server after all. Even though it is only needed when the two browsers cannot establish a direct connection,
+As the articles above explain, it looks like we will need a streaming server after all. Even though it is only needed when the two browsers cannot establish a direct connection,
 you usually do a video call with people out of your local network and most of the time we will need to use a TURN server. The good news is that it already exists an OSS project that deploys a TURN / STUN / ICE server called [coturn][coturngit], and it's also available as an [Ubuntu package][coturn]; the bad news is that for production environments this will be expensive, as you will need a big and scalable infrastructure to maintain it.
 
-To deploy all these parts in Azure is relatively easy: the WebRTC web app will be deployed in the [Azure App Service][appservice], that has high availability built-in, SSL and integrates with [Azure Active Directory][aad] that we will use to manage the access to the service in a later post. The TURN server could be deployed in an [Azure Container Instance][aci], but we need to use UDP and TCP at the same time and this is still not supported in ACI, so we will use a [Virtual Machine][vm] with a startup script that will install the TURN server.
+To deploy all these parts in Azure is relatively easy: the WebRTC web app will be deployed in the [Azure App Service][appservice], which has high availability built-in, SSL, and integrates with [Azure Active Directory][aad] that we will use to manage the access to the service in a later post. The TURN server could be deployed in an [Azure Container Instance][aci], but we need to use UDP and TCP at the same time and this is still not supported in ACI, so we will use a [Virtual Machine][vm] with a startup script that will install the TURN server.
 
 ### TURN Server
 
@@ -51,7 +51,7 @@ sudo systemctl stop coturn
 sudo echo "TURNSERVER_ENABLED=1" > /etc/default/coturn
 ```
 
-Then we generate a configuration file, using some parameters that we will send to the script from our deployment system (see the parameters above):
+Next, we generate a configuration file, using some parameters that we will send to the script from our deployment system (see the parameters above):
 
 ```bash
 # create configuration
@@ -80,7 +80,7 @@ verbose
 no-stdout-log"  > /etc/turnserver.conf
 ```
 
-And, at the end, we create the admin user and generate the SSL certificates with [certbot][certbot]:
+And, in the end, we create the admin user and generate the SSL certificates with [certbot][certbot]:
 
 ```bash
 sudo systemctl start coturn
@@ -89,7 +89,7 @@ sudo systemctl start coturn
 sudo certbot certonly --standalone --deploy-hook "systemctl restart coturn" -d $3 --agree-tos --no-eff-email --register-unsafely-without-email
 ```
 
-This script will be run from a [Azure Resource Manager template][turnserverdeploy], where we will ask for the user and password through the template parameters, and we will also obtain the full server name and IP address from the deployment:
+This script will run from an [Azure Resource Manager template][turnserverdeploy], where we will ask for the user and password through the template parameters, and we will also get the full server name and IP address from the deployment:
 
 ```json
 "commandToExecute": "[concat('sh installturn.sh ''',parameters('turnAdmin'),''' ''',
@@ -100,9 +100,9 @@ This script will be run from a [Azure Resource Manager template][turnserverdeplo
 
 ### Web App
 
-The web app is a customization from [the WebRTC example]][webrtcdemo] to make it the TURN server we have deployed in the first step. Azure App Service has the ability to automatically compile and execute a Node.js inside a Linux server, using [Oryx][oryx] behind the scenes.
+The web app is a customized one based on [the WebRTC example][webrtcdemo] to make it the TURN server we have deployed in the first step. Azure App Service has the ability to automatically compile and execute a Node.js inside a Linux server, using [Oryx][oryx] behind the scenes.
 
-The customizations I made were one for creating unique credentials for each user for a limited time to increase security, and the second one was to generate the ICE configuration with the values we get from the template, like the FQDN from the TURN server.
+The customizations I made were one to create unique credentials for each user for a limited time to increase security, and the second was to generate the ICE configuration with the values we get from the template, such as FQDN of the TURN server.
 
 ```Typescript
 if (this.stunServer) {
@@ -116,7 +116,7 @@ var script: string = data.toString().replace('{{ice_config}}',
                                   util.inspect (ice_config));
 ```
 
-So, in the [deployment template][webappgit] I added the URL for the webapp repo, this will make the App Service get it from Github and then compile the full project into a container and run it:
+So, in the [deployment template][webappgit], I added the URL for the web app repo, this will make the App Service get it from Github and then compile the full project into a container and run it:
 
 ```json
 "properties": {
@@ -139,7 +139,7 @@ The site is configured as a NODE server using Linux:
 
 Using [multiple linked templates][linkedtemplates] we can get the values from the TURN server deployment and pass them to the web app with a rather clean structure. This allows us to deploy in Azure very complex solutions without losing the maintainability of the system with VeryLargeJSON&reg; files.
 
-For this case I have created a main template that launches another two templates for the resources I need to deploy: the virtual machine and the web app. In this second one, we need to know the DNS name that has been created for the virtual machine, so we can configure ICE. In the first template we need to add something like this at the end:
+For this case, I have created a main template that launches another two templates for the resources I need to deploy: the virtual machine and the web app. In this second one, we need to know the DNS name that has been created for the virtual machine, so we can configure ICE. In the first template, we need to add something like this at the end:
 
 ```json
 "outputs": {
