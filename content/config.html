@@ -3,9 +3,9 @@
 <script src='https://statics.teams.cdn.office.net/sdk/v1.6.0/js/MicrosoftTeams.min.js'></script>
 </head>
     <body>
-        <button onclick="(document.getElementById('icon').src = '/images/iconGray.png'); colorClickGray()">Select Gray</button>
-        <img id="icon" src="/images/teamsIcon.png" alt="icon" style="width:100px" />
-        <button onclick="(document.getElementById('icon').src = '/images/iconRed.png'); colorClickRed()">Select Red</button>
+        <button onclick="(document.getElementById('icon').src = '/images/icongray.png'); colorClickGray()">Select Gray</button>
+        <img id="icon" src="/images/teamsicon.png" alt="icon" style="width:100px" />
+        <button onclick="(document.getElementById('icon').src = '/images/iconred.png'); colorClickRed()">Select Red</button>
 
         <script>
             microsoftTeams.initialize();
@@ -35,16 +35,12 @@
             let gr = document.getElementById("gray").style;
             let rd = document.getElementById("red").style;
 
-            const colorClickGray = () => {
-                gr.display = "block";
-                rd.display = "none";
+            function colorClickGray() {
                 microsoftTeams.settings.setValidityState(true);
                 saveGray()
             }
 
-            const colorClickRed = () => {
-                rd.display = "block";
-                gr.display = "none";
+            function colorClickRed(){
                 microsoftTeams.settings.setValidityState(true);
                 saveRed();
             }
