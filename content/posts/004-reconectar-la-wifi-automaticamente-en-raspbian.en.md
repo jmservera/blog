@@ -1,5 +1,5 @@
 +++
-title =  "How to automatically reconnect to the Wifi in Raspbian"
+title =  "How to automatically reconnect to the WiFi in Raspbian"
 date = 2020-11-02T00:05:16+01:00
 tags = ["IoT","Raspberry Pi","Raspbian","Tips & Tricks"]
 featured_image = "https://live.staticflickr.com/3706/19346279608_9805ba6259_b.jpg"
@@ -7,7 +7,7 @@ description = ""
 draft = false
 +++
 
-At home, we have been connecting the plants, lights, doors, the TV, air conditioning, and even Higgs, our pet rabbit, but this last thing will be another post. We have a large variety of devices and sensors, with several Raspberry Pi 2 among them, connected to the WiFi network. Many times we have had to manually reboot the Raspis after a network connection outage because it looks like dhcpcd does not manage this situation.
+At home, we have been connecting the garden, lights, doors, the TV, air conditioner, and even Higgs, our pet rabbit, but this last thing will be another post. We have a large variety of devices and sensors, with several Raspberry Pi 2 among them, connected to the WiFi network. Many times we have had to manually reboot the Raspis after a network connection outage because it looks like dhcpcd does not manage this situation.
 
 After looking for a solution and finding some more or less complex solutions, my favorite one, for its simplicity, is this proposal by [Alex Bain](http://alexba.in/blog/2015/01/14/automatically-reconnecting-wifi-on-a-raspberrypi/). So, I have adapted it to work with the distro I'm currently using, which is Raspbian Buster.
 
@@ -43,6 +43,6 @@ And you add a 5 minutes interval to run it in */etc/crontab*, so it will restart
 */5 *   * * *   root    /usr/local/bin/wifi_rebooter.sh
 ```
 
-Now I no longer need to manually restart all my Raspberry Pi devices every time my connection has been broken for some time.
+Now I no longer need to manually restart all our Raspberry Pi devices every time the connection has been broken for some time.
 
 Makers gonna make.

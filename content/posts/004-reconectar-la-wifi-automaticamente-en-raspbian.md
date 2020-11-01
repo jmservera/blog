@@ -7,7 +7,7 @@ description = ""
 draft = false
 +++
 
-En casa hemos ido conectando las plantas, las luces, persianas, puertas, la tele, el aire acondicionado e incluso a Higgs, nuestro conejo, aunque esto ya os lo explicaré otro día. Tenemos una gran variedad de dispositivos y sensores, entre ellos unas cuantas Raspberry Pi 2 que se conectan a la red WiFi. Ya hemos tenido que reiniciar muchas veces las Raspis headless después de un corte de conexión, porque parece ser que el servicio dhcpcd no gestiona bien esta situación.
+En casa hemos ido conectando el jardín, las luces, persianas, puertas, la tele, el aire acondicionado e incluso a Higgs, nuestro conejo, aunque esto ya os lo explicaré otro día. Tenemos una gran variedad de dispositivos y sensores, entre ellos unas cuantas Raspberry Pi 2 que se conectan a la red WiFi. Ya hemos tenido que reiniciar muchas veces las Raspis headless después de un corte de conexión, porque parece ser que el servicio dhcpcd no gestiona bien esta situación.
 
 Tras realizar una búsqueda he encontrado diversos métodos más o menos complicados, el que más me gustó por la sencillez fue el de [Alex Bain](http://alexba.in/blog/2015/01/14/automatically-reconnecting-wifi-on-a-raspberrypi/), así que lo he adaptado un poco para que funcione bien en Raspbian Buster, que es la distribución que utilizo.
 
