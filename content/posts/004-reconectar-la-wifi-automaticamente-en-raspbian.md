@@ -16,7 +16,7 @@ Lo que hay que hacer es crear un script en */usr/local/bin/wifi_rebooter.sh*. Se
 ```bash
 #!/bin/bash
 
-# The IP for the server you wish to ping (For example, the router IP address)
+# The IP for the server you wish to ping (192.168.1.1 is typically your router)
 SERVER=192.168.1.1
 
 # Only send two pings, sending output to /dev/null
@@ -25,9 +25,20 @@ ping -c2 ${SERVER} > /dev/null
 # If the return code from ping ($?) is not 0 (meaning there was an error)
 if [ $? != 0 ]
 then
+    printf '#' >> /tmp/wirelesscount
+    ln=$(stat --printf="%s" /tmp/wirelesscount)
+    if [ $ln -gt 2 ]
+    then
+        # third time reboot raspi if everything else fails
+        cat /dev/null > /tmp/wirelesscount
+        reboot now
+    fi
     # Restart the wireless interface
     ip link set wlan0 down
     ip link set wlan0 up
+else
+    # reset count if it worked
+    cat /dev/null > /tmp/wirelesscount
 fi
 ```
 
