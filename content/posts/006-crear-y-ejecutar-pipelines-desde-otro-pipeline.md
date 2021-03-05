@@ -19,7 +19,7 @@ Para hacer esto, vamos al apartado de Pipelines y en el apartado "All Pipelines"
 
 ## Creación de la estructura
 
-En el repositorio de código, vamos a añadir una carpeta llamada *pipelines* y dentro un archivo yaml, que se llame, por ejemplo, *base-auto-pipeline.yml*, con la definición de la pipeline que queremos crear y ejecutar dinámicamente. Para el ejemplo usaré una muy sencilla que recibirá un parámetro llamado *testVariable*:
+En el repositorio de código, vamos a añadir una carpeta llamada *pipelines* y dentro un archivo yaml, que se llame, por ejemplo, *base-auto-pipeline.yml*, con la definición de la pipeline que queremos crear y ejecutar dinámicamente. Para el ejemplo usaré una muy sencilla que recibirá una variable llamada *testVariable*:
 
 ```yaml
 trigger: none
