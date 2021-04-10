@@ -3,7 +3,7 @@ title =  "Create and execute another pipeline inside an Azure DevOps pipeline it
 date = 2021-04-10T11:00:16+01:00
 featured_image= "https://live.staticflickr.com/4124/5057713273_e931c3a886_b.jpg"
 tags = ["DevOps"]
-draft = true
+draft = false
 +++
 
 If you need to create and/or execute pipelines from another Azure DevOps (ADO) pipeline, there's an [ADO extension for the az CLI][ado-cli] that will allow us to perform this task, but we will need some preparation steps before running it. Today it's still a preview characteristic, so it may suffer some changes when reaching general availability.
