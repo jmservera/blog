@@ -1,12 +1,14 @@
 +++
 title =  "Crear y ejecutar pipelines desde otro pipeline en Azure DevOps"
-date = 2021-03-05T11:00:16+01:00
+date = 2021-04-10T11:00:16+01:00
 featured_image= "https://live.staticflickr.com/4124/5057713273_e931c3a886_b.jpg"
 tags = ["DevOps"]
 draft = false
 +++
 
-Si os habéis encontrado con la necesidad de crear y ejecutar pipelines de Azure DevOps (ADO) desde una pipeline, existe una extensión de devops para el az CLI que nos permitirá hacer esto, aunque tendremos que preparar un poco el proyecto de ADO antes. A día de hoy todavía es una característica en preview, así que puede que algo de lo que describa aquí sufra cambios antes de estar en disponibilidad general.
+Si os habéis encontrado con la necesidad de crear y ejecutar pipelines de Azure DevOps (ADO) desde una pipeline, existe una [extensión de devops para el az CLI][ado-cli] que nos permitirá hacer esto, aunque tendremos que preparar un poco el proyecto de ADO antes. A día de hoy todavía es una característica en preview, así que puede que algo de lo que describa aquí sufra cambios antes de estar en disponibilidad general.
+
+El primer detalle que debemos conocer es que hay una sutil diferencia entre el archivo de definición de la pipeline, que es un archivo yaml, con la pipeline que se va a ejecutar, que se define normalmente a través de la consola web de ADO, o se pueden también crear desde el CLI o la API REST.
 
 <!--more-->
 
@@ -126,7 +128,7 @@ variables:
   - name: pipelineId
 ```
 
-Los dos primeros pasos del pipeline son para preparar el entorno. El Azure CLI que viene instalado en el agente de Azure DevOps ya tiene instalada la extensión de [DevOps](https://docs.microsoft.com/en-us/cli/azure/ext/azure-devops/pipelines?view=azure-cli-latest) que nos permitirá interactuar con nuestros pipelines. Este caso es un poco diferente del que nos encontramos cuando tenemos que conectar a Azure, donde usamos una Service Connection; aquí tenemos que configurarlo mediante las variables de sistema que nos proporcionan, por ejemplo, el nombre del proyecto *$(System.TeamProject)* o el Personal Access Token (PAT) *$(System.AccessToken)* para realizar el login en el CLI:
+Los dos primeros pasos del pipeline son para preparar el entorno. El Azure CLI que viene instalado en el agente de Azure DevOps ya tiene instalada la [extensión para manejar pipelines][ado-cli-pipelines] que nos permitirá interactuar con nuestros pipelines. Este caso es un poco diferente del que nos encontramos cuando tenemos que conectar a Azure, donde usamos una Service Connection; aquí tenemos que configurarlo mediante las variables de sistema que nos proporcionan, por ejemplo, el nombre del proyecto *$(System.TeamProject)* o el Personal Access Token (PAT) *$(System.AccessToken)* para realizar el login en el CLI:
 
 ```yaml
 steps:
@@ -139,7 +141,7 @@ steps:
   displayName: 'Login Azure DevOps Extension'
 ```
 
-En el siguiente paso, nos encontramos con un script que mira si la pipeline que queremos crear ya existe con ese nombre, para no volver a crearla. En caso negativo, usa el comando [az pipelines create](https://docs.microsoft.com/en-us/cli/azure/ext/azure-devops/pipelines?view=azure-cli-latest#ext_azure_devops_az_pipelines_create) para crear una nueva con el nombre que le queramos dar. Fijaos que aquí usamos el parámetro ``` ${{ parameters.automationName }} ```, que se incrusta usando el lenguaje de plantillas propio de pipelines, aquí este valor no entra como variable de entorno como en otros casos.
+En el siguiente paso, nos encontramos con un script que mira si la pipeline que queremos crear ya existe con ese nombre, para no volver a crearla. En caso negativo, usa el comando [az pipelines create][az-pipelines-create] para crear una nueva con el nombre que le queramos dar. Fijaos que aquí usamos el parámetro ``` ${{ parameters.automationName }} ```, que se incrusta usando el lenguaje de plantillas propio de pipelines, aquí este valor no entra como variable de entorno como en otros casos.
 También estamos usando variables de sistema como el nombre del repositorio, el nombre de la rama, etc. Además proporcionamos un path al archivo yaml que se usará para generar la pipeline y, finalmente, nos guardamos el identificador de la pipeline para poderlo usar luego.
 
 Usamos el parámetro *--skip-first-run* porque queremos ejecutar esa pipeline en un siguiente paso y pasarle alguna variable adicional, esto, además, nos permitiría meter ese paso dentro de un *stage* de forma que podamos introducir un proceso de aprobación manual o cualquier otra comprobación que necesitemos realizar antes de ejecutar la siguiente pipeline.
@@ -183,8 +185,14 @@ Y ahora ya podemos ejecutar la pipeline, en el formulario de ejecución nos apar
 
 ![pipelinerun][run-pipeline]
 
+Y, si todo ha ido bien, podremos ver la creación y ejecución de la pipeline dinámicamente:
+
+![success pipeline][run-pipeline-success]
+
 ## Resumen de enlaces
 
+* [Extensión del CLI para Azure DevOps][ado-cli]
+* [Azure DevOps pipelines CLI][ado-cli-pipelines]
 * [Definición de variables][define-variables] 
 * [Creación de pipelines desde el CLI][az-pipelines-create]
 * [Uso de parámetros tipificados en pipelines][runtime-parameters]
@@ -195,15 +203,17 @@ Y ahora ya podemos ejecutar la pipeline, en el formulario de ejecución nos apar
 
 * Foto de portada por [Pierre-Alexandre Garneau][pierre-inception].
 
-[az-pipelines-create]: https://docs.microsoft.com/en-us/cli/azure/ext/azure-devops/pipelines?view=azure-cli-latest#ext_azure_devops_az_pipelines_create
-[define-variables]: https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch
-[pipeline-phases]: https://docs.microsoft.com/en-us/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
-[output-variable]: https://docs.microsoft.com/en-us/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch#set-a-multi-job-output-variable
-[runtime-parameters]: https://docs.microsoft.com/en-us/azure/devops/pipelines/process/runtime-parameters?view=azure-devops&tabs=script
+[ado-cli]:https://docs.microsoft.com/azure/devops/cli/?view=azure-devops
+[az-pipelines-create]: https://docs.microsoft.com/cli/azure/ext/azure-devops/pipelines?view=azure-cli-latest#ext_azure_devops_az_pipelines_create
+[define-variables]: https://docs.microsoft.com/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch
+[pipeline-phases]: https://docs.microsoft.com/azure/devops/pipelines/process/phases?view=azure-devops&tabs=yaml
+[output-variable]: https://docs.microsoft.com/azure/devops/pipelines/process/variables?view=azure-devops&tabs=yaml%2Cbatch#set-a-multi-job-output-variable
+[runtime-parameters]: https://docs.microsoft.com/azure/devops/pipelines/process/runtime-parameters?view=azure-devops&tabs=script
 
 [folder-permissions]: /006-crear-y-ejecutar-pipelines-desde/folder%20permissions.png "Permisos sobre la carpeta de pipelines"
 [starter-pipeline]: /006-crear-y-ejecutar-pipelines-desde/starter_pipeline.png "Nueva pipeline"
 [ado-variable]: /006-crear-y-ejecutar-pipelines-desde/ado_variable.png "Variable ADO"
-[run-pipeline]: /006-crear-y-ejecutar-pipelines-desde/run_pipeline.png
+[run-pipeline]: /006-crear-y-ejecutar-pipelines-desde/run_pipeline.png "Pipeline run form asking for two parameters"
+[run-pipeline-success]: /006-crear-y-ejecutar-pipelines-desde/run_success.png "Pipeline run success"
 
 [pierre-inception]: https://www.flickr.com/photos/pagarneau/ "Inception"
