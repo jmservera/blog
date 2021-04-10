@@ -1,5 +1,5 @@
 +++
-title =  "Create and execute another pipeline inside an Azure DevOps pipeline itself"
+title =  "Create and execute a new pipeline inside an Azure DevOps pipeline itself"
 date = 2021-04-10T11:00:16+01:00
 featured_image= "https://live.staticflickr.com/4124/5057713273_e931c3a886_b.jpg"
 tags = ["DevOps"]
