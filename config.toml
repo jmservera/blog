@@ -1,6 +1,6 @@
 DefaultContentLanguage = "es"
 baseURL = "https://jmblog.servezas.org"
-theme = "ananke"
+theme = ["github.com/theNewDynamic/gohugo-theme-ananke"]
 enableGitInfo = true
 paginate = 30
 enableRobotsTXT = true
@@ -42,3 +42,10 @@ staticDir = ["static","static_en"]
         title = "Dev-o-Matic 2000"
         weight = 2
         staticDir2 = "static_en"
+
+[privacy]
+  [privacy.googleAnalytics]
+    anonymizeIP = false
+    disable = false
+    respectDoNotTrack = true
+    useSessionStorage = false
