@@ -26,7 +26,7 @@ camera:
 
 A second option is to install the NVR, following the next three steps to run this old version of the software. There are some other options, like using an OSS NVR like [Shinobi][Shinobi], but we will talk about this in another post.
 
-## Step 1: stick the Java version in Ubuntu
+## Step 1: pin the Java version in Ubuntu
 
 The NVR software can be run on the latest Ubuntu versions, but it only works correctly when using the **Java 8u275** version, so the standard Java 8 installer won't work fur us, because the version used today is 8u282 and it is incompatible with NVR. We will need to do two things: 
 
