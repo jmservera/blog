@@ -1,6 +1,6 @@
 ---
-title: "Cómo seguir usando Unifi Video NVR"
-date: 2021-05-23T00:13:08+02:00
+title: "Cómo usar las cámaras Unifi en Home Assistant tras la obsolescencia de su NVR"
+date: 2021-05-30T00:21:08+02:00
 featured_image: https://live.staticflickr.com/3132/5843649056_399705f3d0_w.jpg
 draft: false
 tags: ["IoT"]
@@ -14,7 +14,15 @@ Unifi descatalogó su [Network Video Recorder (NVR)][nvr] en favor del nuevo sis
 
 También han descatalogado la plataforma cloud que permitía ver las cámaras desde su propia aplicación, sin necesidad de tener una IP fija ni abrir puertos en nuestro sistema y hay que usar la nueva que sólo funciona con Unifi Protect. Por suerte, nosotros usamos Home Assistant y ya teníamos eso resuelto con su fantástica [aplicación de móvil][app-hassio], que nos permite crear un interfaz personalizado y visualizar las cámaras en directo. No tiene toda la funcionalidad, por ejemplo, no podemos controlar el zoom de las cámaras desde el Home Assistant, pero de eso ya hablaremos otro día.
 
-Para seguir teniendo acceso a las cámaras tenemos varias opciones. La más sencilla es eliminar el NVR, poner las cámaras en modo standalone y conectar directamente las cámaras al Home Assitant a través de RTSP. Con esta opción perdemos la detección de movimiento y la capacidad de grabar, si eso no te interesa puedes ignorar esta guía y conectar directamente las cámaras.
+Para seguir teniendo acceso a las cámaras tenemos varias opciones. La más sencilla es eliminar el NVR, poner las cámaras en modo standalone y conectar directamente las cámaras al Home Assitant a través de RTSP. Con esta opción perdemos la detección de movimiento y la capacidad de grabar, si eso no te interesa puedes ignorar esta guía y conectar directamente las cámaras con una configuración parecida a esta:
+
+```yaml
+camera:
+    platform: generic
+    name: mycam
+    stream_source: rtsp://yourcamerauri
+    verify_ssl: false
+```
 
 La segunda opción es mantener el NVR, para ello tenemos que realizar los tres pasos que veremos a continuación para poder mantener ese software funcionando. Otra opción es usar otro NVR como [Shinobi][Shinobi], del que también hablaremos otro día.
 
@@ -22,7 +30,7 @@ La segunda opción es mantener el NVR, para ello tenemos que realizar los tres p
 
 ## Paso 1, fijar la versión de Java en Ubuntu
 
-NVR sólo funciona bien con la versión de **Java 8u275**, así que el comando habitual de instalación de Java 8 no nos servirá, porque la versión actual a día de hoy es la 8u282, así que tendremos que hacer dos cosas: 
+NVR se puede instalar en las últimas versiones de Ubuntu, pero sólo funciona bien con la versión de **Java 8u275**, así que el comando habitual de instalación de Java 8 no nos servirá, porque la versión actual a día de hoy es la 8u282, así que tendremos que hacer dos cosas: 
 
 1. Forzar la instalación de la versión que nos interesa
 2. Impedir la actualización automática de la misma cuando ejecutemos cualquier operación de `bash apt upgrade`, para evitar que deje de funcionar el NVR.
@@ -74,11 +82,11 @@ También necesitaremos la clave de API, la podemos encontrar en la configuració
 
 ![En /users podemos abrir la configuración del usuario, activar el acceso a API y copiar el contenido del campo API Key][api-key]
 
-Adicionalmente, podemos también copiar el password que el NVR les va a asignar a las cámaras una vez configuradas. Este password lo podemos encontrar en la configuración general en el apartado "camera settings". Necesitaremos pulsar sobre el campo para ver el password:
+Además, podemos también copiar el password que el NVR les va a asignar a las cámaras una vez configuradas. Este password lo podemos encontrar en la configuración general en el apartado "camera settings". Necesitaremos pulsar sobre el campo para ver el password:
 
 ![En "camera settings" está el password que se usa en las cámaras, aunque está escondido, al pulsar sobre él se muestra][camera-password]
 
-Y, para cabar, en el archivo de configuración del Home Assistant usaremos estos datos en la sección camera, porque ya existe una integración con el NVR de Unifi llamada *uvc*:
+Y, para acabar, en el archivo de configuración del Home Assistant usaremos estos datos en la sección camera, porque ya existe una integración con el NVR de Unifi llamada *uvc*:
 
 ```yaml
 camera:
