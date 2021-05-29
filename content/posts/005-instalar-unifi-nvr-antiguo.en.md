@@ -129,7 +129,7 @@ As NVR is deprecated and there won't be new versions nor bug fixes, this is only
 
 * Header picture by [wiredforlego][surveillance-cam].
 
-[app-hassio]: http://hassioapp "La aplicación móvil oficial para Home Assistant"
+[app-hassio]: https://play.google.com/store/apps/details?id=io.homeassistant.companion.android&hl=en_US&gl=US "The official Home Assistant mobile app"
 [glenn]: https://get.glennr.nl/unifi-video/install/unifi-video-3.10.13.sh
 [hassio]: https://home-assistant.org
 [java8u275]: https://packages.debian.org/stretch/amd64/openjdk-8-jre-headless/download
@@ -140,7 +140,7 @@ As NVR is deprecated and there won't be new versions nor bug fixes, this is only
 [Shinobi]:https://shinobi.video/
 [video2telegram]: https://github.com/jmservera/AzureBlob2Telegram
 
-[cameras]: /005-nvr/cameras.png "Listado de cámaras en el Home Assistant"
+[cameras]: /005-nvr/cameras.png "Camera listing in Home Assistant"
 [camera-password]: /005-nvr/camerapassword.png "In \"camera settings\" you find the camera management password, you need to click on it to see the contents"
 [RTSP]: /005-nvr/RTSP.png "The Streaming Ports option, has a toggle to activate RTSP and a box to change the port number, the default value is 7447"
 [surveillance-cam]: https://www.flickr.com/photos/wiredforsound23/ "Surveillance Camera"

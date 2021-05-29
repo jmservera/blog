@@ -131,7 +131,7 @@ Como NVR ha llegado al final de su ciclo de vida, esto es sólo un apaño tempor
 
 * Header picture by [wiredforlego][surveillance-cam].
 
-[app-hassio]: http://hassioapp "La aplicación móvil oficial para Home Assistant"
+[app-hassio]: https://play.google.com/store/apps/details?id=io.homeassistant.companion.android "La aplicación móvil oficial para Home Assistant"
 [glenn]: https://get.glennr.nl/unifi-video/install/unifi-video-3.10.13.sh
 [hassio]: https://home-assistant.org
 [java8u275]: https://packages.debian.org/stretch/amd64/openjdk-8-jre-headless/download
