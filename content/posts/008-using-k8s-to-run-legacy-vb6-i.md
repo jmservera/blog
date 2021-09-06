@@ -5,13 +5,13 @@ draft= true
 tags = [ "K8s", "VB6", "legacy" ]
 +++
 
-Vamos a ver en una serie de capítulos cómo podemos aprovechar las prácticas más modernas de contenedores para sacarle el último aliento a esas aplicaciones obsoletas que quizá tengamos ejecutándose en nuestros sistemas.
+Vamos a ver en una serie de 4 capítulos cómo podemos aprovechar las prácticas más modernas de contenedores para sacar el último aliento a esas aplicaciones obsoletas que quizá tengamos ejecutándose en nuestros sistemas.
 
-Migrar desarrollos antiguos de aplicaciones servidor en Windows a entornos más modernos puede ser un auténtico quebradero de cabeza. En los mejores casos será una aplicación web ejecutándose en un IIS que podríamos migrar con alguna herramienta automática, pero en muchos otros casos no será tan fácil; hace poco me encontré con el caso de un servidor TCP/IP escrito en VB6. A priori parece que para modernizar esta aplicación a un entorno de contenedores, tendremos que reescribir el código. Seguramente, desde el punto de vista de desarrollo y mantenimiento de la solución, sería la mejor opción, pero todo es cuestión de encontrar los compromisos adecuados entre lo que nos exige el negocio y la capacidad que tenemos en el equipo. En este caso, tener un paso intermedio en el que podemos ahorrarnos montones de máquinas virtuales desplegando en su lugar contenedores era una buena opción, y así damos más tiempo al equipo de desarrollo para que pueda volver a escribir toda la lógica de esa aplicación.
+Si hacemos un inventario de las aplicaciones servidor que tenemos en nuestros servidores Windows, en los mejores casos serán aplicaciones web ejecutándose en un IIS que podríamos migrar con alguna [herramienta semi-automática][azure-migrate], pero en muchos otros casos no será tan fácil. Hace poco me encontré con el caso de un servidor TCP/IP escrito en VB6 que se desplegaba en unos cuantos cientos de máquinas virtuales. A priori, parece que para modernizar esta aplicación a un entorno de contenedores tendremos que reescribir el código. Seguramente, desde el punto de vista de desarrollo y mantenimiento de la solución, sería la mejor opción, pero todo es cuestión de encontrar los compromisos adecuados entre lo que nos exige el negocio y la capacidad que tenemos en el equipo. En este caso, tener un paso intermedio en el que podemos ahorrarnos montones de máquinas virtuales, desplegando en su lugar contenedores, era una buena opción, y así damos más tiempo al equipo de desarrollo para que pueda volver a escribir toda la lógica de esa aplicación.
 
 ---
 
-Hoy en día, Visual Basic 6 ya no es un lenguaje popular y a nadie se le ocurriría usarlo para un nuevo desarrollo. Pero la realidad ahí fuera es que todavía hay muchas aplicaciones en producción usando VB6. Tanto es así que, aunque el IDE esté descatalogado desde 2008, seguimos dando soporte al rutime en modo ["It Just Works"](https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-basic-6/visual-basic-6-support-policy) hasta Windows Server 2019 y Windows 10.
+Hoy en día, Visual Basic 6 ya no es un lenguaje popular y a nadie se le ocurriría usarlo para un nuevo desarrollo. Pero la realidad ahí fuera es que todavía hay muchas aplicaciones en producción usando VB6. Tanto es así que, aunque el IDE esté descatalogado desde 2008, seguimos dando soporte al rutime en modo ["It Just Works"][vb6-support] hasta Windows Server 2019 y Windows 10.
 
 Si combinamos esto con el uso de contenedores Windows y el despliegue de esos contenedores en Kubernetes, vamos a poder ejecutar las aplicaciones VB6 sin necesidad de montar máquinas virtuales para cada aplicación.
 
@@ -97,15 +97,34 @@ COPY .\app\* c:\app\
 CMD ["myapp.exe"]
 ```
 
-> Nota: estoy copiando primero MSWINSCK.OCX y luego el resto de archivos en lugar de hacerlo todo de golpe. Hacerlo así tiene una ventaja a la hora de desarrollar, pues el sistema de construcción de imagenes de Docker almacena en caché cada capa. Como registrar el componente ActiveX es un poco lento, nos evitaremos ese paso cada vez que cambiemos algo en la aplicación.
+Al final nos quedará un `Dockerfile` así:
+
+```docker
+# escape=`
+FROM mcr.microsoft.com/windows/servercore:ltsc2019
+
+RUN md c:\app
+WORKDIR c:\app
+
+COPY .\app\MSWINSCK.OCX C:\APP
+RUN regsvr32 /s c:\app\MSWINSCK.OCX
+
+EXPOSE 9001
+
+COPY .\app\* c:\app\
+
+CMD ["myapp.exe"]
+```
+
+> Nota: veréis que estoy copiando MSWINSCK.OCX de forma individual y luego copio el resto de archivos, aunque estén todos en la misma carpeta. Hacerlo así tiene una ventaja a la hora de desarrollar, pues el sistema de construcción de imagenes de Docker almacena en caché cada capa, para aprovecharla en el caso de que nada haya cambiado. El componente OCX seguro que no cambiará y, como registrar el componente ActiveX es un poco lento, nos evitaremos ese paso cada vez que cambiemos algo en la aplicación.
 
 Una vez tengamos el Dockerfile completo podemos generar la imagen:
 
-```docker
+```cmd
 docker build -t vb6 .
 ```
 
-E incluso ejecutarlo para comprobar que está todo funcionando:
+Y luego ejecutarlo para comprobar que está todo funcionando, publicamos el puerto para poder conectarnos directamente:
 
 ```cmd
 docker run -d -p 9001:9001 vb6
@@ -121,11 +140,19 @@ Y deberíamos ver en el terminal el nombre de nuestro servidor, que en este caso
 
 ![Telnet terminal with the text 'Connected to server: c433ff27eb8f'][telnet-connected]
 
+Ese identificador, que también habremos visto al ejecutar `docker run`, nos será útil a la hora de depurar y gestionar el contenedor. Aunque Docker genera un nombre aleatorio con el que también podremos gestionarlo, es mucho más fácil usar los primeros dígitos del identificador para ejecutar comandos de docker. En nuestro caso el identificador es `c433ff27...`, si tenemos pocos contenedores ejecutándose es poco probable que tengamos una colisión de los primeros dígitos del identificador, así que podemos escribir alguno de los siguientes comandos:
 
+```bash
+docker logs c4 -f
+docker exec -it c4 cmd
+docker kill c4
+```
+
+El primero para ver los del contenedor en tiempo real, el segundo para obtener una línea de comando interactiva dentro del contenedor y el último para parar el contenedor.
 
 ## Sigue jugando
 
-Ahora ya tenemos esa aplicación antigua hecha en VB6 dentro de nuestro ciclo de DevOps. Estamos generando una imagen de contenedor que es más fácil de mover y desplegar que una imagen de máquina virtual. En el [próximo capítulo][chapter-ii] de la serie veremos cómo podemos desplegar este contenedor en Kubernetes para poder aprovechar las ventajas que nos ofrece, como por ejemplo que nuestra aplicación vuelva a levantarse automáticamente en caso de fallo.
+Ahora ya podemos meter esa aplicación antigua dentro de nuestro ciclo de DevOps. Estamos generando una imagen de contenedor que es más fácil de mover y desplegar que una imagen de máquina virtual. En el [próximo capítulo][chapter-ii] de la serie veremos cómo podemos desplegar este contenedor en Kubernetes para poder aprovechar las ventajas que nos ofrece, como por ejemplo que nuestra aplicación vuelva a levantarse automáticamente en caso de fallo.
 
 ## Enlaces
 
@@ -133,10 +160,13 @@ Ahora ya tenemos esa aplicación antigua hecha en VB6 dentro de nuestro ciclo de
 * [Docker Desktop][docker-desktop]
 
 
-
-[ghcode]: https://github.com/jmservera/legacyvb6ink8s
+[azure-migrate]: https://azure.microsoft.com/services/azure-migrate/
 [docker-desktop]: https://www.docker.com/products/docker-desktop
-[telnet-connected]: /008-using-k8s-to-run/telnet-connected.png "Telnet terminal"
+[ghcode]: https://github.com/jmservera/legacyvb6ink8s
+[vb6-support]: https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-basic-6/visual-basic-6-support-policy
 
-[chapter-i]:{{< relref "#aplicación-de-ejemplo-vb6" >}}
-[chapter-ii]:{{< ref "posts/008-using-k8s-to-run-legacy-vb6-ii.md" >}}
+[chapter-i]: {{< relref "#aplicación-de-ejemplo-vb6" >}}
+[chapter-ii]: {{< ref "posts/008-using-k8s-to-run-legacy-vb6-ii.md" >}}
+
+
+[telnet-connected]: /008-using-k8s-to-run/telnet-connected.png "Telnet terminal"
