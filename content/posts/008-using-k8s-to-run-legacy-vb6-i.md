@@ -15,7 +15,7 @@ Si hacemos un inventario de las aplicaciones servidor que tenemos en nuestros se
 
 ## Capítulo 1: Generar una imagen de contenedor de Windows para ejecutar VB6
 
-Hoy en día, Visual Basic 6 ya no es un lenguaje popular y a nadie se le ocurriría usarlo para un nuevo desarrollo. Pero la realidad ahí fuera es que todavía hay muchas aplicaciones en producción usando VB6, y siguen apareciendo preguntas nuevas en [Stack Overflow][so-vb6]. Tanto es así que, aunque el IDE esté descatalogado desde 2008, seguimos dando soporte al rutime en modo ["It Just Works"][vb6-support], incluso en Windows Server 2019 y Windows 10.
+Hoy en día, Visual Basic 6 ya no es un lenguaje popular y a nadie se le ocurriría usarlo para un nuevo desarrollo. Pero la realidad ahí fuera es que todavía hay muchas aplicaciones en producción usando VB6, y siguen apareciendo preguntas nuevas en [Stack Overflow][so-vb6]. Tanto es así que, aunque el IDE esté descatalogado desde 2008, seguimos dando soporte al runtime en modo ["It Just Works"][vb6-support], incluso en Windows Server 2019 y Windows 10.
 
 Si combinamos esto con el uso de contenedores Windows y el despliegue de esos contenedores en Kubernetes, vamos a poder ejecutar las aplicaciones VB6 sin necesidad de montar máquinas virtuales para cada aplicación.
 
@@ -92,7 +92,7 @@ COPY .\app\* c:\app\
 CMD ["myapp.exe"]
 ```
 
-> Nota: veréis que estoy copiando MSWINSCK.OCX de forma individual y luego copio el resto de archivos, aunque estén todos en la misma carpeta. Hacerlo así tiene una ventaja a la hora de desarrollar, pues el sistema de construcción de imagenes de Docker almacena en caché cada capa, para aprovecharla en el caso de que nada haya cambiado. El componente OCX seguro que no cambiará y, como registrar el componente ActiveX es un poco lento, nos evitaremos ese paso cada vez que cambiemos algo en la aplicación.
+> Nota: veréis que estoy copiando MSWINSCK.OCX de forma individual y luego copio el resto de archivos, aunque estén todos en la misma carpeta. Hacerlo así tiene una ventaja a la hora de desarrollar, pues el sistema de construcción de imágenes de Docker almacena en caché cada capa, para aprovecharla en el caso de que nada haya cambiado. El componente OCX seguro que no cambiará y, como registrar el componente ActiveX es un poco lento, nos evitaremos ese paso cada vez que cambiemos algo en la aplicación.
 
 <details>
   <summary>Aquí podéis ver el  `Dockerfile` completo...</summary>
