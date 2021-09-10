@@ -30,6 +30,8 @@ En esta serie de artículos vamos a ver los siguientes casos:
 
 ## Aplicación de ejemplo VB6
 
+![Splash Screen de VB6][vb6-splash]
+
 No tiene mucho sentido a estas alturas de la historia de VB6 ponernos a explicar demasiado el código de ejemplo. Encontraréis el código en la carpeta `source` del [repositorio de ejemplo en GitHub][ghcode]. A continuación tenéis algunos detalles básicos para entender qué hace la aplicación y cómo nos conectaremos a ella.
 
 ### Código del servidor VB6 {#vb6server}
@@ -168,3 +170,4 @@ Ahora ya podemos meter esa aplicación antigua dentro de nuestro ciclo de DevOps
 
 
 [telnet-connected]: /008-using-k8s-to-run/telnet-connected.png "Telnet terminal"
+[vb6-splash]: /008-using-k8s-to-run/vb6.png "VB6 Splash Screen"
