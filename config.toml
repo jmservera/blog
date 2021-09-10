@@ -30,6 +30,9 @@ staticDir = ["static","static_en"]
     background_color_class = "bg-black"
     recent_posts_number = 5
 
+[markup.goldmark.renderer]
+    unsafe= true
+
 [languages]
     [languages.es]
         languageCode = "es-es"
