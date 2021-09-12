@@ -1,5 +1,5 @@
 module github.com/jmservera/blog
 
-go 1.16
+go 1.17
 
-require github.com/theNewDynamic/gohugo-theme-ananke v2.6.7+incompatible // indirect
+require github.com/theNewDynamic/gohugo-theme-ananke v0.0.0-20210714132908-e3f7fbe39d7b // indirect

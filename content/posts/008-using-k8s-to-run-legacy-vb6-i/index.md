@@ -2,7 +2,7 @@
 title= "Cómo usar Kubernetes para modernizar aplicaciones Windows (i)"
 subtitle= "Generar una imagen de contenedor de Windows que ejecute una aplicación VB6"
 date= 2021-09-10T11:00:47+02:00
-featured_image="/008-using-k8s-to-run/vb6.png"
+featured_image="vb6.png"
 tags = [ "K8s", "VB6", "legacy" ]
 draft= false
 +++
@@ -169,5 +169,5 @@ Ahora ya podemos meter esa aplicación antigua dentro de nuestro ciclo de DevOps
 [chapter-i]: {{< relref "#aplicación-de-ejemplo-vb6" >}}
 
 
-[telnet-connected]: /008-using-k8s-to-run/telnet-connected.png "Telnet terminal"
-[vb6-splash]: /008-using-k8s-to-run/vb6.png "VB6 Splash Screen"
+[telnet-connected]: telnet-connected.png "Telnet terminal"
+[vb6-splash]: vb6.png "VB6 Splash Screen"
