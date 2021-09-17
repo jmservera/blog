@@ -1,42 +1,42 @@
 +++
-title= "Cómo usar Kubernetes para modernizar aplicaciones Windows (i)"
-subtitle= "Generar una imagen de contenedor de Windows que ejecute una aplicación VB6"
-date= 2021-09-10T11:00:47+02:00
+title= "How to use Kubernetes to modernize Windows Applications (i)"
+date= 2021-09-15T11:00:47+02:00
 featured_image="vb6.png"
 tags = [ "K8s", "VB6", "legacy" ]
-draft= false
+draft= true
 +++
 
-Vamos a ver en una serie de 4 capítulos cómo podemos aprovechar las prácticas más modernas de contenedores para sacar el último aliento a esas aplicaciones antiguas que quizá tengamos ejecutándose en nuestros sistemas.
+And here we are with the first in a series of 4 posts on how to make something new from old Windows Server Applications, that you may have running on-premises wasting a lot of hardware and energy.
 
-Si hacemos un inventario de las aplicaciones servidor que tenemos en nuestros servidores Windows, en los mejores casos serán aplicaciones web ejecutándose en un IIS que podríamos migrar con alguna [herramienta semi-automática][azure-migrate], pero en muchos otros casos no será tan fácil. Hace poco me encontré con el caso de un servidor TCP/IP escrito en VB6 que se desplegaba en unos cuantos cientos de máquinas virtuales. A priori, parece que para modernizar esta aplicación a un entorno de contenedores tendremos que reescribir el código. Seguramente, desde el punto de vista de desarrollo y mantenimiento de la solución, sería la mejor opción, pero todo es cuestión de encontrar los compromisos adecuados entre lo que nos exige el negocio y la capacidad que tenemos en el equipo. En este caso, tener un paso intermedio en el que podemos ahorrarnos montones de máquinas virtuales, desplegando en su lugar contenedores es una buena opción, y así damos más tiempo al equipo de desarrollo para que pueda volver a escribir toda la lógica de esa aplicación.
+When you do an assessment of running applications in your Windows servers, in the best scenario you may find some old web apps running on an IIS server that could be migrated using some [semi-automated tool][azure-migrate], but, in my experience, there are lots of not-so-edge cases that won't be as easy. Recently, I stumbled on a TCP/IP server application written in VB6 that was running in a few hundred virtual machines. At first, you may think that this application does not deserve the effort and it would be better to do a complete rewrite. Well, on the one side, from a developer or operator point of view you are completely right, but, on the other side, from a business perspective it's all about trade-offs, and you may not have the budget to build a new app from scratch. So, what if you could reduce the current solution cost by containerizing it, so you save in hardware, and use these savings to push for the rewrite of a new and modern solution? Let's talk about it.
 
 ---
 
-## Capítulo 1: Generar una imagen de contenedor de Windows para ejecutar VB6
+## Chapter 1: Generate a Windows Container image to run VB6
 
-Hoy en día, Visual Basic 6 ya no es un lenguaje popular y a nadie se le ocurriría usarlo para un nuevo desarrollo. Pero la realidad ahí fuera es que todavía hay muchas aplicaciones en producción usando VB6, y siguen apareciendo preguntas nuevas en [Stack Overflow][so-vb6]. Tanto es así que, aunque el IDE esté descatalogado desde 2008, seguimos dando soporte al runtime en modo ["It Just Works"][vb6-support], incluso en Windows Server 2019 y Windows 10.
+Is this even possible? Visual Basic 6 is not the popular programming language it used to be anymore, and nobody would use it for new developments. But, the reality out there is that there are still a lot of legacy VB6 applications running in production systems; as proof, you can still find people asking new questions on [Stack Overflow][so-vb6]. It is to such an extent that, even the IDE has been retired since 2008, we still provide support for the runtime in 
+["It Just Works"][vb6-support] mode up to Windows Server 2019 and Windows 10.
 
-Si combinamos esto con el uso de contenedores Windows y el despliegue de esos contenedores en Kubernetes, vamos a poder ejecutar las aplicaciones VB6 sin necesidad de montar máquinas virtuales para cada aplicación ni tener que gestionarlas por separado (pero recuerda que todavía te tienes que encargar de [los parches][patch-and-upgrade]).
+This means we can create a Windows Container image that will run VB6 applications, and we can use this image to run VB6 applications in a Kubernetes cluster, without any changes to the application itself and without the hassle of maintaining hundreds of Windows Server machines separately (but remember you still have to [patch them][patch-and-upgrade]).
 
-> **Nota:** es importante recordar que no podemos ejecutar un escritorio remoto en un contenedor de Windows, así que esta técnica se limita a las aplicaciones en modo servidor, sin interfaz gráfica.
+> **Side note:** remember that containers are headless machines, so we won't be able to run a Remote Desktop session or any graphical interface action in these Windows Containers.
 
-En esta serie de artículos vamos a ver los siguientes casos:
+In this series I'm going to explain how to:
 
-* [Capítulo 1][chapter-i]: Generar una imagen de contenedor de Windows que ejecute una [aplicación VB6](#vb6server)
-* [Capítulo 2][chapter-ii]: Desplegar la aplicación en Kubernetes y dar acceso a través de un puerto TCP/IP
-* Capítulo 3: Usar un Ingress Controller para cifrar y enrutar tráfico TCP/IP
-* Capítulo 4: Monitorización de nuestra aplicación a partir de los logs
+* [Chapter 1][chapter-i]: Generate a Windows Container Image to run a [VB6 server application](#vb6server)
+* [Chapter 2][chapter-ii]: Run the app in a Kubernetes cluster and provide a connection to the TCP/IP port.
+* Chapter 3: Use an Ingress Controller to provide communication encryption and route the TCP/IP to the right container.
+* Chapter 4: Application monitorization from the logs.
 
-## Aplicación de ejemplo VB6
+## A VB6 example application
 
 ![Splash Screen de VB6][vb6-splash]
 
-No tiene mucho sentido a estas alturas de la historia de VB6 ponernos a explicar demasiado el código de ejemplo. Encontraréis el código en la carpeta `source` del [repositorio de ejemplo en GitHub][ghcode]. A continuación tenéis algunos detalles básicos para entender qué hace la aplicación y cómo nos conectaremos a ella.
+I'm going to use some very simple example code, but there's no sense in doing a deep explanation of what it does. You can find the code in the folder named `source` from [the GitHub repo][ghcode]. Let me explain some basics below.
 
-### Código del servidor VB6 {#vb6server}
+### VB6 Server Code {#vb6server}
 
-Para demostrar que el sistema funciona y probar que puedo instalar algunos componentes OCX, he creado una aplicación de prueba que puede escuchar vía `Telnet` en el puerto `9001` y responde con el nombre del servidor:
+The app is a simple TCP/IP server to check that our system is running the app, it is serving content, and to demonstrate that you can use old OCX components. So, you can communicate with this app via `Telnet` on the `9001` port. The app will answer with the server name upon connection:
 
 ```vb
 tcpServer(intMax).Accept requestid
@@ -44,15 +44,16 @@ tcpServer(intMax).Accept requestid
 tcpServer(intMax).SendData ("Connected to server: " + tcpServer(intMax).LocalHostName + vbCrLf)
 ``` 
 
-### Empaquetado de la aplicación VB6
+### Packaging the VB6 app
 
-Como necesitamos que sea una aplicación de consola, vamos a generar el ejecutable por línea de comando:
+We will use an old trick to force the app to run in console mode, using this command line:
 
 ```bash
 "C:\Program Files (x86)\Microsoft Visual Studio\VB98\VB6.EXE" /MAKE vb6app.vbp /OUTDIR ..\app
 "C:\Program Files (x86)\Microsoft Visual Studio\VB98\LINK.EXE" /EDIT /SUBSYSTEM:CONSOLE ..\app\myapp.exe
 ```
 
+Once we get the application, we can start generating the container image. I'm using some additional components that we will add
 Y una vez tenemos la aplicación ya podemos empezar a generar el contenedor, como es una aplicación VB6 y usamos algunos componentes adicionales, tendremos que tener acceso a algunos archivos `.ocx` y `.dll` que deberán acompañar a la aplicación.
 
 ## Generación del contenedor Windows
