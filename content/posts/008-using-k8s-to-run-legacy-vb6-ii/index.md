@@ -68,7 +68,7 @@ El nombre tiene que ser Ãºnico porque luego obtendremos una URL para acceder a Ã
 az acr credential show --name myacrjms -o table
 ```
 
-Obtendremos el nombre de usuario y dos credenciales.
+Obtendremos el nombre de usuario y dos credenciales:
 
 ```
 USERNAME    PASSWORD                          PASSWORD2
