@@ -24,7 +24,7 @@ This means we can create a Windows Container image that will run VB6 application
 In this series I'm going to explain how to:
 
 * [Chapter 1][chapter-i]: Generate a Windows Container Image to run a [VB6 server application](#vb6server)
-* Chapter 2: Run the app in a Kubernetes cluster and provide a connection to the TCP/IP port.
+* [Chapter 2][chapter-ii]: Run the app in a Kubernetes cluster and provide a connection to the TCP/IP port.
 * Chapter 3: Use an Ingress Controller to provide communication encryption and route the TCP/IP to the right container.
 * Chapter 4: Application monitorization from the logs.
 
@@ -168,6 +168,7 @@ We made it easier to fit an old application into our DevOps workflow. We are gen
 [vb6-support]: https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-basic-6/visual-basic-6-support-policy
 
 [chapter-i]: {{< relref "#aplicación-de-ejemplo-vb6" >}}
+[chapter-ii]: {{< ref "posts/008-using-k8s-to-run-legacy-vb6-ii" >}}
 
 [telnet-connected]: telnet-connected.png "Telnet terminal"
 [vb6-splash]: vb6.png "VB6 Splash Screen"
