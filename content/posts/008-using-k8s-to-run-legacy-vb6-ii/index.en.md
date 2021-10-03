@@ -1,9 +1,8 @@
 +++
 title =  "Cómo usar Kubernetes para ejecutar código antiguo en Windows (ii)"
 date = 2021-09-13T15:29:35+02:00
-tags = []
+tags = [ "K8s", "VB6", "legacy" ]
 featured_image = "jurassic-park.jpg"
-description = ""
 draft = true
 +++
 
