@@ -6,7 +6,7 @@ tags = [ "K8s", "VB6", "legacy" ]
 draft= false
 +++
 
-Here it is, the first in a series of 4 posts on how to make something new from old Windows Server Applications that you may have running on-premises wasting a lot of hardware and energy.
+Here it is, the first in a series of (~~4~~) 5 posts on how to make something new from old Windows Server Applications that you may have running on-premises wasting a lot of hardware and energy.
 
 When you do an assessment of running applications in your Windows servers, as a best scenario, you may find some old web apps running on an IIS server that could be migrated using a [semi-automated tool][azure-migrate], but, in my experience, there are lots of not-so-edge cases that won't be as easy as that. Recently, I stumbled on a TCP/IP server application written in VB6 that was running in a few hundred virtual machines. At first, you may think that this application does not deserve the effort and it would be better to do a complete rewrite. Well, on the one side, from a developer or operator point of view you are completely right, but, on the other side, from a business perspective it's all about trade-offs, and you may not have the budget to build a new app from scratch. So, what if you could reduce the current solution cost by containerizing it, so you save in hardware, and use these savings to push for the rewrite of a new and modern solution? Let's talk about it.
 
@@ -27,6 +27,7 @@ In this series I'm going to explain how to:
 * Chapter 2: Run the app in a Kubernetes cluster and provide a connection to the TCP/IP port.
 * Chapter 3: Use an Ingress Controller to provide communication encryption and route the TCP/IP to the right container.
 * Chapter 4: Application monitorization from the logs.
+* Chapter 5: Manage and update a bunch of containers.
 
 ## A VB6 example application
 
@@ -168,6 +169,7 @@ We made it easier to fit an old application into our DevOps workflow. We are gen
 [vb6-support]: https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-basic-6/visual-basic-6-support-policy
 
 [chapter-i]: {{< relref "#aplicación-de-ejemplo-vb6" >}}
+[chapter-ii]: {{< ref "posts/008-using-k8s-to-run-legacy-vb6-ii" >}}
 
 [telnet-connected]: telnet-connected.png "Telnet terminal"
 [vb6-splash]: vb6.png "VB6 Splash Screen"

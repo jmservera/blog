@@ -7,7 +7,7 @@ tags = [ "K8s", "VB6", "legacy" ]
 draft= false
 +++
 
-Vamos a ver en una serie de 4 capítulos cómo podemos aprovechar las prácticas más modernas de contenedores para sacar el último aliento a esas aplicaciones antiguas que quizá tengamos ejecutándose en nuestros sistemas.
+Vamos a ver en una serie de (~~4~~) 5 capítulos cómo podemos aprovechar las prácticas más modernas de contenedores para sacar el último aliento a esas aplicaciones antiguas que quizá tengamos ejecutándose en nuestros sistemas.
 
 Si hacemos un inventario de las aplicaciones servidor que tenemos en nuestros servidores Windows, en los mejores casos serán aplicaciones web ejecutándose en un IIS que podríamos migrar con alguna [herramienta semi-automática][azure-migrate], pero en muchos otros casos no será tan fácil. Hace poco me encontré con el caso de un servidor TCP/IP escrito en VB6 que se desplegaba en unos cuantos cientos de máquinas virtuales. A priori, parece que para modernizar esta aplicación a un entorno de contenedores tendremos que reescribir el código. Seguramente, desde el punto de vista de desarrollo y mantenimiento de la solución, sería la mejor opción, pero todo es cuestión de encontrar los compromisos adecuados entre lo que nos exige el negocio y la capacidad que tenemos en el equipo. En este caso, tener un paso intermedio en el que podemos ahorrarnos montones de máquinas virtuales, desplegando en su lugar contenedores es una buena opción, y así damos más tiempo al equipo de desarrollo para que pueda volver a escribir toda la lógica de esa aplicación.
 
@@ -24,9 +24,10 @@ Si combinamos esto con el uso de contenedores Windows y el despliegue de esos co
 En esta serie de artículos vamos a ver los siguientes casos:
 
 * [Capítulo 1][chapter-i]: Generar una imagen de contenedor de Windows que ejecute una [aplicación VB6](#vb6server)
-* Capítulo 2: Desplegar la aplicación en Kubernetes y dar acceso a través de un puerto TCP/IP
+* [Capítulo 2][chapter-ii]: Desplegar la aplicación en Kubernetes y dar acceso a través de un puerto TCP/IP
 * Capítulo 3: Usar un Ingress Controller para cifrar y enrutar tráfico TCP/IP
-* Capítulo 4: Monitorización de nuestra aplicación a partir de los logs
+* Capítulo 4: Monitorizar nuestra aplicación a partir de los logs
+* Capítulo 5: Gestionar y actualizar montones de contenedores
 
 ## Aplicación de ejemplo VB6
 
@@ -168,6 +169,7 @@ Ahora ya podemos meter esa aplicación antigua dentro de nuestro ciclo de DevOps
 [vb6-support]: https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-basic-6/visual-basic-6-support-policy
 
 [chapter-i]: {{< relref "#aplicación-de-ejemplo-vb6" >}}
+[chapter-ii]: {{< ref "posts/008-using-k8s-to-run-legacy-vb6-ii" >}}
 
 [telnet-connected]: telnet-connected.png "Telnet terminal"
 [vb6-splash]: vb6.png "VB6 Splash Screen"
