@@ -24,7 +24,7 @@ This means we can create a Windows Container image that will run VB6 application
 In this series I'm going to explain how to:
 
 * [Chapter 1][chapter-i]: Generate a Windows Container Image to run a [VB6 server application](#vb6server)
-* [Chapter 2][chapter-ii]: Run the app in a Kubernetes cluster and provide a connection to the TCP/IP port.
+* Chapter 2: Run the app in a Kubernetes cluster and provide a connection to the TCP/IP port.
 * Chapter 3: Use an Ingress Controller to provide communication encryption and route the TCP/IP to the right container.
 * Chapter 4: Application monitorization from the logs.
 * Chapter 5: Manage and update a bunch of containers.
