@@ -1,5 +1,5 @@
 +++
-title =  "Cómo usar Kubernetes para ejecutar código antiguo en Windows (ii)"
+title =  "Cómo usar Kubernetes para ejecutar código antiguo en Windows (II)"
 date = 2021-10-05T21:30:35+02:00
 tags = [ "K8s", "VB6", "legacy" ]
 featured_image = "jurassic-park.jpg"
@@ -8,7 +8,7 @@ draft = false
 
 En el [capítulo anterior][chapter-i] ensamblamos un contenedor Docker para ejecutar una aplicación servidor escrita en VB6. Hoy vamos a utilizar este contenedor en un clúster de Kubernetes desplegado en Azure usando el servicio AKS.
 
----
+<!--more-->
 
 Recordemos que en esta serie de artículos vamos a ver los siguientes casos:
 

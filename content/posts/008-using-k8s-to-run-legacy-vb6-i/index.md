@@ -11,7 +11,7 @@ Vamos a ver en una serie de (~~4~~) 5 capítulos cómo podemos aprovechar las pr
 
 Si hacemos un inventario de las aplicaciones servidor que tenemos en nuestros servidores Windows, en los mejores casos serán aplicaciones web ejecutándose en un IIS que podríamos migrar con alguna [herramienta semi-automática][azure-migrate], pero en muchos otros casos no será tan fácil. Hace poco me encontré con el caso de un servidor TCP/IP escrito en VB6 que se desplegaba en unos cuantos cientos de máquinas virtuales. A priori, parece que para modernizar esta aplicación a un entorno de contenedores tendremos que reescribir el código. Seguramente, desde el punto de vista de desarrollo y mantenimiento de la solución, sería la mejor opción, pero todo es cuestión de encontrar los compromisos adecuados entre lo que nos exige el negocio y la capacidad que tenemos en el equipo. En este caso, tener un paso intermedio en el que podemos ahorrarnos montones de máquinas virtuales, desplegando en su lugar contenedores es una buena opción, y así damos más tiempo al equipo de desarrollo para que pueda volver a escribir toda la lógica de esa aplicación.
 
----
+<!--more-->
 
 ## Capítulo 1: Generar una imagen de contenedor de Windows para ejecutar VB6
 
