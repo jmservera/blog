@@ -169,7 +169,6 @@ We made it easier to fit an old application into our DevOps workflow. We are gen
 [vb6-support]: https://docs.microsoft.com/en-us/previous-versions/visualstudio/visual-basic-6/visual-basic-6-support-policy
 
 [chapter-i]: {{< relref "#aplicación-de-ejemplo-vb6" >}}
-[chapter-ii]: {{< ref "posts/008-using-k8s-to-run-legacy-vb6-ii" >}}
 
 [telnet-connected]: telnet-connected.png "Telnet terminal"
 [vb6-splash]: vb6.png "VB6 Splash Screen"
