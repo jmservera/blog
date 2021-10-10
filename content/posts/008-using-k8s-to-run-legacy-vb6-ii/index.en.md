@@ -1,6 +1,6 @@
 +++
 title =  "How to use Kubernetes to modernize Windows Applications (II)"
-date = 2021-10-05T21:30:35+02:00
+date = 2021-10-11T10:45:45+02:00
 tags = [ "K8s", "VB6", "legacy" ]
 featured_image = "jurassic-park.jpg"
 draft = false
@@ -28,18 +28,17 @@ Just remember that we are working with a legacy app that it is not prepared for 
 
 ### How will Kubernetes help?
 
-First of all, a little disclaimer. We must do some introspection and assess what other options we have before deciding that Kubernetes is the best one. 
-Lo primero que nos tenemos que preguntar a la hora de pensar si debemos usar Kubernetes es qué otras opciones hay. Muchas veces nuestra aplicación la podremos desplegar en algún sistema FaaS, PaaS, CaaS, IaaS o incluso directamente en Hierro&trade;, pues probablemente será más sencillo que usar Kubernetes. En el caso concreto que estoy comentado, la aplicación estaba desplegada en IaaS, pero usaba cientos de VMs que eran muy difíciles de mantener, administrar y actualizar, aquí Kubernetes nos va ayudar mucho tanto en los costes como en el mantenimiento de la aplicación, así que es justificable el trabajo adicional.
+Before we go further I want to warn you with a little disclaimer. It is important to assess what other options we have before deciding that Kubernetes is the best one. Many times, our app could be deployed on FaaS, PaaS, CaaS, IaaS or even Bare Metal&trade;, because, probably, any of these systems would be easier to manage than a Kubernetes cluster. In this particular case, the app was already deployed on IaaS, but managing and updating hundreds of VMs was a very difficult and error prone job, so the additional setup work in Kubernetes was completely justified here.
 
-Kubernetes es una solución que se asegurará que nuestros contenedores se ejecuten y se comuniquen entre sí en un sistema distribuido. Todo eso lo hará a partir de la descripción que le daremos sobre cómo tiene que ocurrir eso y a partir de ahí se encargará de que todo se mantenga en funcionamiento. Si hay que reiniciar un contenedor porque la aplicación ha dejado de funcionar, o hay que mover la aplicación de servidor porque falta memoria en el que está, o necesitamos actualizar cientos o miles de pods sin tener que realizar montones de pasos manuales o scripts muy complejos, Kubernetes se encargará de hacer ese trabajo.
+Kubernetes will ensure our containers execute and communicate properly inside a distributed and scalable system. All this work will be done from a static description about how all this has to be managed, that we will provide, and the service will ensure all complies with the description and works properly. If there's a need to restart a container because the application stopped working, or a container must be moved to another server instance because it ran out of resources, o we need to update hundreds or thousands of images, Kubernetes will do this for us.
 
-En este caso vamos a utilizar el Azure Kubernetes Service ([AKS][aks]), un servicio gestionado de Kubernetes que nos automatiza la gestión de los nodos donde se ejecutarán los contenedores (en este caso nodo = máquina virtual). Es decir, Kubernetes se encarga de nuestros contenedores, comunicaciones, publicar puertos, balanceo, etc.. y AKS se ocupa de que Kubernetes esté instalado y funcionando en la cantidad de máquinas virtuales que nosotros le indiquemos, además de proporcionarnos otros servicios de Azure como el balanceo de carga externo, IP pública, Gateway, etc.
+In this case we are going to use the Azure Kubernetes Service ([AKS][aks]), a managed Kubernetes service that automates the management of the nodes where the containers will run (in this case every node will be a virtual machine). Kubernetes will manage our containers, networking, ports, load balancing, and so on, and the AKS service will take that Kubernetes is properly installed and runs the number of nodes we indicated, and will also provide us with other important services from Azure, like external load balancing, gateways, public IPs and horizontal node auto-scale.
 
-### Desplegar un AKS en Azure
+### Deploy an AKS in Azure
 
-Para poder ejecutar nuestros contenedores vamos a desplegar un [Azure Kubernetes Service][aks], le añadiremos un conjunto de nodos Windows, porque los nodos principales tienen que ser Linux, y describiremos la configuración de los contenedores que se van a ejecutar en el sistema.
+To execute our containers we will deploy an [Azure Kubernetes Service][aks], adding a Windows node pool later, because the main nodes need to be Linux ones, and we will describe the container configuration we want for our application.
 
-Como siempre en Azure, el primer paso es tener un grupo de recursos donde desplegar, desde `PowerShell` (porque estamos usando Windows Containers) creamos el grupo de recursos con la línea de comando [Az][azcli]:
+As usual, the first step is creating a resource group in our Azure subscription. As we are using Windows, let's stick to `PowerShell` (but the steps are very similar with a `bash` command line). Using the [Az][azcli] run this commands:
 
 ```ps1
 $rgName="myRG"
@@ -48,7 +47,7 @@ $region="northeurope"
 az group create -g $rgName -l $region
 ```
 
-Si todavía no lo tenemos, vamos a necesitar un registro de contenedores donde publicar las imágenes y que nuestro clúster tenga acceso al mismo.
+If we still don't have one, we will need a container registry to publish our container images so our cluster can reach them:
 
 ```ps1
 $aksName="myAKS"
@@ -57,25 +56,25 @@ $acrName="${aksName}ACR"
 az acr create -g $rgName -n $acrName --admin-enabled true --sku Basic
 ```
 
-Luego vamos a crear un AKS básico con máquinas pequeñas conectado a ese registro. Los nodos de sistema tienen que ser nodos Linux, pero luego añadiremos un conjunto de auto-escalado de nodos Windows. Para el tipo de red usaremos Azure CNI, porque la necesitaremos para los nodos Windows: 
+Then we will create a basic AKS with small VMs, connected to the registry we created before. The system nodes need to be Linux, but we will add a Windows scale set later on. For the networking driver we will choose Azure CNI, because it is mandatory for Windows nodes:
 
 ```ps1
 az aks create -g $rgName -n $aksName --network-plugin Azure --generate-ssh-keys -s Standard_B4ms --attach-acr $acrName
 ```
 
-Y ahora añadiremos un conjunto de nodos Windows al que se ha creado en el paso anterior:
+Now that we have a cluster, we can add some Windows nodes to it:
 
 ```ps1
 az aks nodepool add -g $rgName --cluster-name $aksName -s Standard_D2_v2 --os-type Windows --name winnp --node-count 0 --min-count 0 --max-count 3 --enable-cluster-autoscaler --node-taints 'os=windows:NoSchedule' 
 ```
 
-Hemos marcado a esos nodos con una etiqueta de tipo *[taint][k8s-taint]*, con el valor `os=windows:NoSchedule`, para controlar mejor qué contenedores se ejecutan dentro de esos nodos. Más adelante veremos por qué es útil esa etiqueta, pero básicamente funciona como un repelente de los contenedores que no definan esa etiqueta.
+Notice that we have labeled the nodes with a *[taint][k8s-taint]* with the value `os=windows:NoSchedule`. This label allows us to have a better control on which containers will execute into these nodes. We will see later why this taint label is useful, but shortly, it works as a container repellant for the ones that don't define this label.
 
-### ¿Cómo subo el contenedor a Kubernetes?
+### And now, how do I upload my container to Kubernetes?
 
-Kubernetes no tiene una interfaz de subida de contenedores, lo que necesitamos es que nuestro clúster tenga acceso al lugar donde guardaremos las imágenes. Podríamos usar, por ejemplo, Docker Hub, que es el lugar de donde hemos estado descargando las imágenes base para generar la nuestra, pero en Azure tenemos el service Azure Container Registry que estará más cerca de nuestro AKS y será nuestro registro privado en el mismo grupo de recursos. Es el que hemos creado antes con el comando `az acr`.
+Well, Kubernetes does not have an interface for uploading containers, what we need is to have access to a container registry where the images are stored. We could use a public one, as Docker Hub, the place where we found the base Windows images in the previous chapter, but we also have the Azure Container Registry that will be closer to our AKS and will be our private registry. This is the one we created to with the `az acr` command before, and we attached it to our cluster during the cluster creation.
 
-Para conectarnos al registro de contenedores desde Docker necesitaremos unas credenciales, para conseguirlas podemos ejecutar el siguiente comando en PowerShell:
+We need to download the registry credentials so we can use them from the `docker` command line:
 
 ```ps1
 $acrCreds=(az acr credential show --name $acrName --query [username,passwords[0].value] | ConvertFrom-Json)
@@ -83,7 +82,7 @@ $acrCreds=(az acr credential show --name $acrName --query [username,passwords[0]
 docker login "${acrName}.azurecr.io" -u $acrCreds[0] -p $acrCreds[1]
 ```
 
-Finalmente, tenemos que etiquetar nuestro contenedor y subirlo a ese registro, usamos el contenedor `vb6` que creamos en el capítulo anterior:
+And to upload our image to the registry we need to tag it with our registry name and upload it with the cli. We will use the `vb6` image we created in the previous chapter:
 
 ```bash
 docker tag vb6 "${acrName}.azurecr.io/vb6:1.0"
@@ -91,7 +90,7 @@ docker push "${acrName}.azurecr.io/vb6:1.0"
 ```
 
 <details>
-  <summary>Haz click aquí para ver el script completo hasta ahora...</summary>
+  <summary>Click here to see the complete script...</summary>
 
 ```ps1
 # PowerShell
@@ -120,23 +119,23 @@ az aks nodepool add -g $rgName --cluster-name $aksName -s Standard_D2_v2 --os-ty
 </details>
 
 
-### Definición de elementos de Kubernetes
+### Kubernetes definition files
 
-Para poder conectar a nuestro clúster, necesitaremos instalar el comando [`kubectl`][kubectl] y obtener las credenciales de conexión:
+Now we need to tell Kubernetes what we want to execute there. To connect and manage our cluster we have to install the [`kubectl`][kubectl] command line (install it from the link above), and we also need the credentials:
 
 ```ps1
 az aks get-credentials -n $aksName -g $rgName --admin
 ```
 
-En Kubernetes, la unidad más pequeña de despliegue es un [Pod][pods]. Dentro de un Pod definiremos lo que necesita esa unidad mínima para poder ejecutarse; podemos tener uno o varios contenedores, definir el almacenamiento, límites de memoria o CPU, cómo y en qué orden tienen que arrancar los contenedores, etc.
+In Kubernetes, the smallest unit you can deploy is a [Pod][pods]. Inside the Pod we will define what this minimal unit needs to execute; we can have one or many containers, define the storage, CPU and memory limits, how and in which order our containers must run, and many other things.
 
-Tenemos múltiples formas de crear elementos en kubernetes, podemos ejecutar comandos directamente con la línea de comando `kubectl` para ejecutar un contenedor:
+There are many ways to create items in Kubernetes, we can, for example, execute a direct order to execute a container with the `kubectl` cli:
 
-```bash
+```ps1
 kubectl run vbserver --image=myaksacr.azurecr.io/vb6:1.0
 ```
 
-Pero también podemos usar una definición en `yaml` o `json` que podremos almacenar en un repositorio de código y tenerlo versionado. Nosotros vamos a definir en el Pod nuestra imagen en un archivo `yaml` como este:
+But the preferred way is to create a `yaml` or `json` definition that we will store in a code repository, so we have a version controlled infra as code repo. We will define our Pod in a `yaml` file like this one:
 
 ```yaml
 # vbserverpod.yaml
@@ -148,7 +147,7 @@ metadata:
     app: vbserver # Etiqueta para identificar el Pod
 spec:
   nodeSelector:
-    "kubernetes.io/os": windows
+    "Kubernetes.io/os": windows
   containers:
   - name: vbserver-container
     image: jmaks.azurecr.io/vb6:1.0
@@ -162,37 +161,37 @@ spec:
     effect: "NoSchedule"
 ```
 
-En este pod hemos definido un contenedor con nuestra imagen, que indica el puerto por el que sirve el contenido. Hemos añadido esa `toleration` que habíamos creado antes en los nodos Windows, para asegurarnos que el Pod podrá ejecutarse en ese tipo de nodos, e indicado con el `nodeSelector` que solo se ejecuta en los nodos Windows. La toleration nos sirve para evitar que se desplieguen pods con contenedores Linux en esos nodos, ya que el nodeSelector sólo es efectivo si está definido, pero como no es obligatorio, los pods se intentarán desplegar en el primer nodo que esté libre. Hacerlo así nos evitará problemas futuros de pods que no se levantan porque no existe una imagen Windows para ellos.
+In this pod we have defined a container with our custom image, and indicated the port we are using. We have added a `toleration` that matches the `taint` we defined in the Windows nodes to ensure that the only pods that run there are the ones we want. We have also indicated with the `nodeSelector` that this Pod can only execute in Windows nodes. The `toleration` avoids potential problems, because usually Pods that run on Linux do not specify a nodeSelector and this would cause many problems because they may try to run inside a Windows node and we will get lots of weird errors.
 
-Para desplegarlo podemos usar el comando apply que puede leer ese `yaml` y aplicar los cambios necesarios en el clúster:
+To deploy this `yaml` inside our cluster we can run this command:
 
 ```ps1
 kubectl apply -f vbserverpod.yaml
 ```
 
-Al desplegar un pod en Kubernetes, el sistema intentará descargar el contenedor y ejecutarlo, pero no podremos acceder a él porque sólo estará disponible en la red interna con una dirección IP efímera, esto es, si se reinicia el pod la IP se pierde. Si queremos probarlo, podemos utilizar el comando `kubectl port-forward pod/vbserver 9001` , eso nos creará un proxy local para acceder a nuestro pod.
+When deploying a pod, Kubernetes will download the container image and execute it inside the cluster, but we won't be able to access to it, because it will only be available inside the internal network with an ephemeral IP, that is, if the pod restarts we lose this IP address. We still can test it using a port forwarding trick executing the `kubectl port-forward pod/vbserver 9001` command, that will create a local proxy so we can reach our pod.
 
-También podremos ver en qué estado está nuestro pod con el comando: 
+Other useful commands are the `describe` one that will show us what's happening with it: 
 
 ```ps1
 kubectl describe pod vbserver
 ```
 
-Y ver los logs con:
+An if the pod is running, we can see its logs too:
 
 ```ps1
 kubectl logs vbserver
 ```
 
-Para poder publicar nuestro pod hacia el exterior necesitaremos definir un servicio, un elemento virtual de Kubernetes que nos permite proporcionar una IP a un conjunto de pods en la red interna, a nivel de nodo o pública. La diferencia con la IP del pod es que ésta no cambia por mucho que reiniciemos o destruyamos los pods, mientras dure la definición del servicio tendremos esa IP, además hará un balanceo de carga simple entre todos los pods que se encuentren bajo el selector definido.
+To have access to the pod from outside the cluster we need to expose it with a `service`, a virtual Kubernetes element that allows us to provide an IP address to a set of pods in the internal network, and also at node lever or even a public one. The main difference with the internal IP of the pod, is that this address will not change with pod restarts, and we will also get a simple load balancer between all the pods under the same defined selector:
 
-Usaremos la siguiente línea de comando para crear el servicio directamente (añadimos el modificador -o yaml para ver la definición como resultado): 
+We will use this command line to create the service, adding the `-o yaml` modifier to see the result of the command: 
 
 ```ps1
 kubectl expose pod/vbserver --name vbserver-service --port 9001 --target-port 9001 --type LoadBalancer -o yaml
 ``` 
 
-Para obtener una IP pública usamos un servicio de tipo LoadBalancer, que en AKS se corresponderá con un Load Balancer Standard de Azure y publicará en una IP el puerto de nuestros nodos, el `yaml` generado por la operación será parecido a este:
+As we asked for a LoadBalancer, it will create a public IP address that in AKS will come from a Standard Load Balancer in Azure, the generated `yaml` file will look like this:
 
 ```yaml
 apiVersion: v1
@@ -211,22 +210,22 @@ spec:
   type: LoadBalancer
 ```
 
-La forma que tiene el servicio para encontrar los pods a los que tiene que dirigir el tráfico de esa IP es a través del selector, así, si tuviéramos múltiples pods, el balanceador iría distribuyendo la carga entre las instancias de los pods que estén funcionando y tengan esa etiqueta. En Kubernetes podemos crear pods que escalen automáticamente mediante los [deployments][deployment] y el [Horizontal Pod Autoscaler][hpa], pero eso lo dejaremos para más adelante.
+The created service finds the pods to redirect the incoming traffic using the provided selector, so, if we had many pods, the load balancer would distribute the traffic among all the working instances that had the same label defined in the selector. Within Kubernetes we can create pods that scale automatically using the [deployments][deployment] and the [Horizontal Pod Autoscaler][hpa], but as our current service cannot scale we won't use this feature by now.
 
-Si ahora listamos los servicios en Kubernetes, veremos que se ha asignado una IP pública a nuestro servicio además de la IP interna que tiene en el cluster:
+Now we can list the services and we will see the public IP address of the service and the internal IP used inside the cluster:
 
 ```bash
 > kubectl get services -o wide
 
 NAME                          TYPE           CLUSTER-IP   EXTERNAL-IP     PORT(S)          AGE
-service/kubernetes            ClusterIP      10.0.0.1     <none>          443/TCP          69m
+service/Kubernetes            ClusterIP      10.0.0.1     <none>          443/TCP          69m
 service/vbserver              LoadBalancer   10.0.98.53   20.67.149.184   9001:32691/TCP   17m
 
 ```
 
-Y así ya tenemos nuestro servicio publicado en ese puerto a través de un Load Balancer de Azure, si vamos al portal podremos ver en el grupo de recursos autogenerado por AKS, que ahí hay un Load Balancer y se ha creado una regla tanto en el LB como en el NSG para servir a través de ese puerto.
+And voilà, we now have our service published in a public IP and port through the Azure Load Balancer, if we go to the portal and dig into the autogenerated resource group for AKS, you will see the Load Balancer and how a rule has been automatically created there and also in the Network Security Group to allow traffic through this port.
 
-Así que podremos ejecutar un telnet a esa dirección para conectar con nuestro servidor, pero esta vez ya la tenemos en una IP pública en Internet:
+Now we can run a telnet to this address to check that our services answers the connection, but this time we will use the public IP address:
 
 ```bash 
 > telnet 20.67.149.184 9001 
@@ -245,13 +244,13 @@ Connected to server: vbserver
 [chapter-ii]: {{< ref "posts/008-using-k8s-to-run-legacy-vb6-ii.md" >}}
 
 [azcli]: https://docs.microsoft.com/cli/azure/install-azure-cli
-[aks]: https://docs.microsoft.com/azure/aks/intro-kubernetes
-[deployment]: https://kubernetes.io/docs/concepts/workloads/controllers/deployment/
+[aks]: https://docs.microsoft.com/azure/aks/intro-Kubernetes
+[deployment]: https://Kubernetes.io/docs/concepts/workloads/controllers/deployment/
 [ghcode]: https://github.com/jmservera/legacyvb6ink8s
-[hpa]:  https://kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
-[k8s-taint]: https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
-[kubectl]: https://kubernetes.io/docs/tasks/tools/
-[pods]: https://kubernetes.io/docs/concepts/workloads/pods/
+[hpa]:  https://Kubernetes.io/docs/tasks/run-application/horizontal-pod-autoscale/
+[k8s-taint]: https://Kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/
+[kubectl]: https://Kubernetes.io/docs/tasks/tools/
+[pods]: https://Kubernetes.io/docs/concepts/workloads/pods/
 [windows-nodes-faq]: https://docs.microsoft.com/azure/aks/windows-faq
 
 

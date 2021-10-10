@@ -30,7 +30,7 @@ Recordemos que estamos trabajando con una aplicación antigua que no está prepa
 
 Lo primero que nos tenemos que preguntar a la hora de pensar si debemos usar Kubernetes es qué otras opciones hay. Muchas veces nuestra aplicación la podremos desplegar en algún sistema FaaS, PaaS, CaaS, IaaS o incluso directamente en Hierro&trade;, pues probablemente será más sencillo que usar Kubernetes. En el caso concreto que estoy comentado, la aplicación estaba desplegada en IaaS, pero usaba cientos de VMs que eran muy difíciles de mantener, administrar y actualizar, aquí Kubernetes nos va ayudar mucho tanto en los costes como en el mantenimiento de la aplicación, así que es justificable el trabajo adicional.
 
-Kubernetes es una solución que se asegurará que nuestros contenedores se ejecuten y se comuniquen entre sí en un sistema distribuido. Todo eso lo hará a partir de la descripción que le daremos sobre cómo tiene que ocurrir eso y a partir de ahí se encargará de que todo se mantenga en funcionamiento. Si hay que reiniciar un contenedor porque la aplicación ha dejado de funcionar, o hay que mover la aplicación de servidor porque falta memoria en el que está, o necesitamos actualizar cientos o miles de pods sin tener que realizar montones de pasos manuales o scripts muy complejos, Kubernetes se encargará de hacer ese trabajo.
+Kubernetes es una solución que se asegurará que nuestros contenedores se ejecuten y se comuniquen entre sí en un sistema distribuido. Todo eso lo hará a partir de la descripción que le daremos sobre cómo tiene que ocurrir eso y a partir de ahí se encargará de que todo se mantenga en funcionamiento. Si hay que reiniciar un contenedor porque la aplicación ha dejado de funcionar, o hay que mover la aplicación de servidor porque falta memoria en el que está, o necesitamos actualizar cientos o miles de imágenes sin tener que realizar montones de pasos manuales o scripts muy complejos, Kubernetes se encargará de hacer ese trabajo.
 
 En este caso vamos a utilizar el Azure Kubernetes Service ([AKS][aks]), un servicio gestionado de Kubernetes que nos automatiza la gestión de los nodos donde se ejecutarán los contenedores (en este caso nodo = máquina virtual). Es decir, Kubernetes se encarga de nuestros contenedores, comunicaciones, publicar puertos, balanceo, etc.. y AKS se ocupa de que Kubernetes esté instalado y funcionando en la cantidad de máquinas virtuales que nosotros le indiquemos, además de proporcionarnos otros servicios de Azure como el balanceo de carga externo, IP pública, Gateway, etc.
 
@@ -129,7 +129,7 @@ az aks get-credentials -n $aksName -g $rgName --admin
 
 En Kubernetes, la unidad más pequeña de despliegue es un [Pod][pods]. Dentro de un Pod definiremos lo que necesita esa unidad mínima para poder ejecutarse; podemos tener uno o varios contenedores, definir el almacenamiento, límites de memoria o CPU, cómo y en qué orden tienen que arrancar los contenedores, etc.
 
-Tenemos múltiples formas de crear elementos en kubernetes, podemos ejecutar comandos directamente con la línea de comando `kubectl` para ejecutar un contenedor:
+Tenemos múltiples formas de crear elementos en Kubernetes, podemos ejecutar comandos directamente con la línea de comando `kubectl` para ejecutar un contenedor:
 
 ```bash
 kubectl run vbserver --image=myaksacr.azurecr.io/vb6:1.0
