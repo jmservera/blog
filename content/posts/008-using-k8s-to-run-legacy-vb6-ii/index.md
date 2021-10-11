@@ -13,30 +13,30 @@ En el [capítulo anterior][chapter-i] ensamblamos un contenedor Docker para ejec
 Recordemos que en esta serie de artículos vamos a ver los siguientes casos:
 
 * [Capítulo 1][chapter-i]: Generar una imagen de contenedor de Windows que ejecute una aplicación VB6.
-* [Capítulo 2][chapter-ii]: Desplegar la aplicación en Kubernetes y dar acceso a través de un puerto TCP/IP.
+* [Capítulo 2][chapter-ii]: Desplegar la aplicación en Kubernetes y dar acceso público a través de un puerto TCP/IP.
 * Capítulo 3: Usar un Ingress Controller para cifrar y enrutar tráfico TCP/IP.
-* Capítulo 4: Monitorización de nuestra aplicación a partir de los logs.
-* Capítulo 5: Gestionar y actualizar montones de contenedores
+* Capítulo 4: Monitorización de nuestra aplicación en Kubernetes a partir de los logs.
+* Capítulo 5: Gestionar y actualizar montones de contenedores.
 
 ## Capítulo 2: desplegar una aplicación Windows en Kubernetes con AKS
 
 [![El personal técnico viendo pasar los contenedores de VB6. Bueno, en realidad es una escena de Jurassic Park donde los personajes alucinan viendo a los dinosaurios.][jurassic-park]][jurassic-screenrant]
 
-Una vez que hemos preparado el contenedor y hemos comprobado que es capaz de servir contenido a través de un puerto TCP/IP, vamos a ver cómo podemos desplegar esa aplicación en Kubernetes y publicar la aplicación al exterior.
+Una vez que hemos preparado el contenedor y hemos comprobado que es capaz de servir contenido a través de un puerto TCP/IP, es el momento de desplegar esa aplicación en Kubernetes y publicar la aplicación al exterior.
 
-Recordemos que estamos trabajando con una aplicación antigua que no está preparada para escalar horizontalmente, ni es un servicio stateless y lo que estamos haciendo es un apaño temporal hasta que modernicemos de verdad la aplicación. Pero, aún así, podremos aprovechar algunas de las ventajas que nos ofrece Kubernetes.
+Recordemos que estamos trabajando con una aplicación antigua que no está preparada para escalar horizontalmente, tampoco es un servicio stateless. Lo que estamos haciendo es un apaño temporal hasta que modernicemos de verdad la aplicación. Pero, aún así, podremos aprovechar algunas de las ventajas que nos ofrece Kubernetes.
 
 ### ¿Cómo nos ayudará Kubernetes?
 
-Lo primero que nos tenemos que preguntar a la hora de pensar si debemos usar Kubernetes es qué otras opciones hay. Muchas veces nuestra aplicación la podremos desplegar en algún sistema FaaS, PaaS, CaaS, IaaS o incluso directamente en Hierro&trade;, pues probablemente será más sencillo que usar Kubernetes. En el caso concreto que estoy comentado, la aplicación estaba desplegada en IaaS, pero usaba cientos de VMs que eran muy difíciles de mantener, administrar y actualizar, aquí Kubernetes nos va ayudar mucho tanto en los costes como en el mantenimiento de la aplicación, así que es justificable el trabajo adicional.
+Lo primero que nos tenemos que preguntar a la hora de decidir si debemos usar Kubernetes es qué otras opciones tenemos. Muchas veces nuestra aplicación la podremos desplegar en algún sistema FaaS, PaaS, CaaS, IaaS o incluso directamente en Hierro&trade;, pues probablemente será más sencillo que usar Kubernetes. En el caso concreto que estoy comentado, la aplicación estaba desplegada en IaaS, pero usaba cientos de VMs que eran muy difíciles de mantener, administrar y actualizar. Aquí Kubernetes nos va ayudar mucho tanto en los costes como en el mantenimiento de la aplicación, así que es justificable el trabajo adicional.
 
-Kubernetes es una solución que se asegurará que nuestros contenedores se ejecuten y se comuniquen entre sí en un sistema distribuido. Todo eso lo hará a partir de la descripción que le daremos sobre cómo tiene que ocurrir eso y a partir de ahí se encargará de que todo se mantenga en funcionamiento. Si hay que reiniciar un contenedor porque la aplicación ha dejado de funcionar, o hay que mover la aplicación de servidor porque falta memoria en el que está, o necesitamos actualizar cientos o miles de imágenes sin tener que realizar montones de pasos manuales o scripts muy complejos, Kubernetes se encargará de hacer ese trabajo.
+Kubernetes es una solución se encargará de que nuestros contenedores se ejecuten y se comuniquen entre sí en un sistema distribuido. Todo eso lo hará a partir de la descripción que le daremos sobre cómo tiene que ocurrir eso y a partir de ahí se encargará de que todo se mantenga en funcionamiento. Si hay que reiniciar un contenedor porque la aplicación ha dejado de funcionar, o hay que mover la aplicación de servidor porque falta memoria en el que está, o necesitamos actualizar cientos o miles de imágenes sin tener que realizar montones de pasos manuales o scripts muy complejos, Kubernetes se encargará de hacer ese trabajo.
 
-En este caso vamos a utilizar el Azure Kubernetes Service ([AKS][aks]), un servicio gestionado de Kubernetes que nos automatiza la gestión de los nodos donde se ejecutarán los contenedores (en este caso nodo = máquina virtual). Es decir, Kubernetes se encarga de nuestros contenedores, comunicaciones, publicar puertos, balanceo, etc.. y AKS se ocupa de que Kubernetes esté instalado y funcionando en la cantidad de máquinas virtuales que nosotros le indiquemos, además de proporcionarnos otros servicios de Azure como el balanceo de carga externo, IP pública, Gateway, etc.
+En este caso vamos a utilizar el Azure Kubernetes Service ([AKS][aks]), un servicio gestionado de Kubernetes que nos automatiza la gestión de los nodos donde se ejecutarán los contenedores (en Azure no = máquina virtual). Es decir, Kubernetes se encarga de nuestros contenedores, comunicaciones, publicar puertos, balanceo, etc.. y AKS se ocupa de que Kubernetes esté instalado y funcionando en la cantidad de máquinas virtuales que nosotros le indiquemos, además de proporcionarnos otros servicios de Azure como el balanceo de carga externo, IP pública, Gateway, etc.
 
 ### Desplegar un AKS en Azure
 
-Para poder ejecutar nuestros contenedores vamos a desplegar un [Azure Kubernetes Service][aks], le añadiremos un conjunto de nodos Windows, porque los nodos principales tienen que ser Linux, y describiremos la configuración de los contenedores que se van a ejecutar en el sistema.
+Para poder ejecutar nuestros contenedores vamos a desplegar un [Azure Kubernetes Service][aks], y le añadiremos un conjunto de nodos Windows donde podremos desplegar nuestros contenedores.
 
 Como siempre en Azure, el primer paso es tener un grupo de recursos donde desplegar, desde `PowerShell` (porque estamos usando Windows Containers) creamos el grupo de recursos con la línea de comando [Az][azcli]:
 
@@ -56,7 +56,7 @@ $acrName="${aksName}ACR"
 az acr create -g $rgName -n $acrName --admin-enabled true --sku Basic
 ```
 
-Luego vamos a crear un AKS básico con máquinas pequeñas conectado a ese registro. Los nodos de sistema tienen que ser nodos Linux, pero luego añadiremos un conjunto de auto-escalado de nodos Windows. Para el tipo de red usaremos Azure CNI, porque la necesitaremos para los nodos Windows: 
+Luego vamos a crear un AKS básico con máquinas pequeñas conectado a ese registro. Los nodos de sistema tienen que ser nodos Linux, pero luego añadiremos un conjunto de auto-escalado de nodos Windows. Para el tipo de red usaremos Azure CNI, porque la necesitaremos para los nodos Windows, y el último parámetro conectará el clúster con nuestro registro de contenedores: 
 
 ```ps1
 az aks create -g $rgName -n $aksName --network-plugin Azure --generate-ssh-keys -s Standard_B4ms --attach-acr $acrName
@@ -72,7 +72,7 @@ Hemos marcado a esos nodos con una etiqueta de tipo *[taint][k8s-taint]*, con el
 
 ### ¿Cómo subo el contenedor a Kubernetes?
 
-Kubernetes no tiene una interfaz de subida de contenedores, lo que necesitamos es que nuestro clúster tenga acceso al lugar donde guardaremos las imágenes. Podríamos usar, por ejemplo, Docker Hub, que es el lugar de donde hemos estado descargando las imágenes base para generar la nuestra, pero en Azure tenemos el service Azure Container Registry que estará más cerca de nuestro AKS y será nuestro registro privado en el mismo grupo de recursos. Es el que hemos creado antes con el comando `az acr`.
+Kubernetes no tiene una interfaz de subida de contenedores, lo que necesitamos es que nuestro clúster tenga acceso al lugar donde guardaremos las imágenes. Podríamos usar, por ejemplo, Docker Hub, que es el lugar de donde hemos estado descargando las imágenes base para generar la nuestra, pero en Azure tenemos el servicio Azure Container Registry que estará más cerca de nuestro AKS y será nuestro registro privado en el mismo grupo de recursos. Es el que hemos creado antes con el comando `az acr`.
 
 Para conectarnos al registro de contenedores desde Docker necesitaremos unas credenciales, para conseguirlas podemos ejecutar el siguiente comando en PowerShell:
 
@@ -121,7 +121,7 @@ az aks nodepool add -g $rgName --cluster-name $aksName -s Standard_D2_v2 --os-ty
 
 ### Definición de elementos de Kubernetes
 
-Para poder conectar a nuestro clúster, necesitaremos instalar el comando [`kubectl`][kubectl] y obtener las credenciales de conexión:
+Ahora necesitamos decirle a Kubernetes qué queremos ejecutar ahí. Para poder conectar y gestionar nuestro clúster, necesitaremos instalar el comando [`kubectl`][kubectl] y también necesitaremos las credenciales de conexión. El siguiente comando descargará la clave de API usada por `kubectl` para conetar a nuestro clúster:
 
 ```ps1
 az aks get-credentials -n $aksName -g $rgName --admin
@@ -171,21 +171,23 @@ kubectl apply -f vbserverpod.yaml
 
 Al desplegar un pod en Kubernetes, el sistema intentará descargar el contenedor y ejecutarlo, pero no podremos acceder a él porque sólo estará disponible en la red interna con una dirección IP efímera, esto es, si se reinicia el pod la IP se pierde. Si queremos probarlo, podemos utilizar el comando `kubectl port-forward pod/vbserver 9001` , eso nos creará un proxy local para acceder a nuestro pod.
 
-También podremos ver en qué estado está nuestro pod con el comando: 
+También podremos ver en qué estado está nuestro pod con el comando `describe`: 
 
 ```ps1
 kubectl describe pod vbserver
 ```
 
-Y ver los logs con:
+Y ver los `logs` cuando el contenedor ya está en funcionamiento:
 
 ```ps1
 kubectl logs vbserver
 ```
 
-Para poder publicar nuestro pod hacia el exterior necesitaremos definir un servicio, un elemento virtual de Kubernetes que nos permite proporcionar una IP a un conjunto de pods en la red interna, a nivel de nodo o pública. La diferencia con la IP del pod es que ésta no cambia por mucho que reiniciemos o destruyamos los pods, mientras dure la definición del servicio tendremos esa IP, además hará un balanceo de carga simple entre todos los pods que se encuentren bajo el selector definido.
+### Obtener una IP pública para nuestro pod
 
-Usaremos la siguiente línea de comando para crear el servicio directamente (añadimos el modificador -o yaml para ver la definición como resultado): 
+Para poder publicar nuestro pod hacia el exterior necesitaremos definir un servicio, un elemento virtual de Kubernetes que nos permite proporcionar una IP a un conjunto de pods. Esta IP puede ser de la red interna, para que otros pods puedan acceder al servicio, pero también se puede publicar a nivel de nodo o podemos obtener una IP pública. La diferencia con la IP del pod es que ésta no cambia por mucho que reiniciemos o destruyamos los pods, mientras dure la definición del servicio tendremos esa IP, además hará un balanceo de carga simple entre todos los pods que se encuentren bajo el selector definido.
+
+Usaremos la siguiente línea de comando para crear el servicio directamente, añadiendo el modificador -o yaml veremos la definición como resultado: 
 
 ```ps1
 kubectl expose pod/vbserver --name vbserver-service --port 9001 --target-port 9001 --type LoadBalancer -o yaml
@@ -231,6 +233,10 @@ Así que podremos ejecutar un telnet a esa dirección para conectar con nuestro 
 > telnet 20.67.149.184 9001 
 Connected to server: vbserver
 ```
+
+## Continuará
+
+En el próximo capítulo veremos algunas técnicas para ejecutar múltiples instancias de este servicio y poder dar servicio a múltiples clientes cada uno con su propia configuración. Nos vemos pronto.
 
 ## Enlaces
 
