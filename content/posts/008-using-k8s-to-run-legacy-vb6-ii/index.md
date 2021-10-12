@@ -14,7 +14,7 @@ Recordemos que en esta serie de artículos vamos a ver los siguientes casos:
 
 * [Capítulo 1][chapter-i]: Generar una imagen de contenedor de Windows que ejecute una aplicación VB6.
 * [Capítulo 2][chapter-ii]: Desplegar la aplicación en Kubernetes y dar acceso público a través de un puerto TCP/IP.
-* Capítulo 3: Usar un Ingress Controller para cifrar y enrutar tráfico TCP/IP.
+* [Capítulo 3][chapter-iii]: Usar un Ingress Controller para cifrar y enrutar tráfico TCP/IP.
 * Capítulo 4: Monitorización de nuestra aplicación en Kubernetes a partir de los logs.
 * Capítulo 5: Gestionar y actualizar montones de contenedores.
 
@@ -248,6 +248,7 @@ En el próximo capítulo veremos algunas técnicas para ejecutar múltiples inst
 
 [chapter-i]: {{< relref "posts/008-using-k8s-to-run-legacy-vb6-i.md" >}}
 [chapter-ii]: {{< ref "posts/008-using-k8s-to-run-legacy-vb6-ii.md" >}}
+[chapter-iii]: {{< ref "posts/008-using-k8s-to-run-legacy-vb6-iii.md" >}}
 
 [azcli]: https://docs.microsoft.com/cli/azure/install-azure-cli
 [aks]: https://docs.microsoft.com/azure/aks/intro-kubernetes
@@ -262,6 +263,3 @@ En el próximo capítulo veremos algunas técnicas para ejecutar múltiples inst
 
 [jurassic-park]: ./jurassic-park.jpg "El personal técnico viendo pasar los contenedores de VB6. No, es una escena de Jurassic Park de los personajes observando a los dinosaurios, con la misma cara que pone la gente cuando hablas de Kubernetes ejecutando VB6."
 [jurassic-screenrant]: https://screenrant.com/jurassic-park-questions-want-answered/ "Fuente original de la imagen - Screenrant"
-
-<!-- [chapter-iii]: < ref "posts/008-using-k8s-to-run-legacy-vb6-iii.md" >}}
-[chapter-iv]: < ref "posts/008-using-k8s-to-run-legacy-vb6-iv.md" >}} -->

@@ -25,7 +25,7 @@ En esta serie de artículos vamos a ver los siguientes casos:
 
 * [Capítulo 1][chapter-i]: Generar una imagen de contenedor de Windows que ejecute una [aplicación VB6](#vb6server)
 * [Capítulo 2][chapter-ii]: Desplegar la aplicación en Kubernetes y dar acceso a través de un puerto TCP/IP
-* Capítulo 3: Usar un Ingress Controller para cifrar y enrutar tráfico TCP/IP
+* [Capítulo 3][chapter-iii]: Usar un Ingress Controller para cifrar y enrutar tráfico TCP/IP
 * Capítulo 4: Monitorizar nuestra aplicación a partir de los logs
 * Capítulo 5: Gestionar y actualizar montones de contenedores
 
@@ -170,6 +170,7 @@ Ahora ya podemos meter esa aplicación antigua dentro de nuestro ciclo de DevOps
 
 [chapter-i]: {{< relref "#aplicación-de-ejemplo-vb6" >}}
 [chapter-ii]: {{< ref "posts/008-using-k8s-to-run-legacy-vb6-ii" >}}
+[chapter-iii]: {{< ref "posts/008-using-k8s-to-run-legacy-vb6-iii.md" >}}
 
 [telnet-connected]: telnet-connected.png "Telnet terminal"
 [vb6-splash]: vb6.png "VB6 Splash Screen"
