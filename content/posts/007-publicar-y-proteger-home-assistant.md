@@ -2,7 +2,7 @@
 title =  "Publicar y proteger home assistant"
 date = 2021-04-09T11:00:16+01:00
 featured_image= "https://live.staticflickr.com/8159/29448875205_8e97d97f6a_5k.jpg"
-tags = ["hassio"]
+tags = ["IoT","hassio"]
 draft = true
 +++
 
