@@ -10,6 +10,4 @@ Hace ya algún tiempo que vengo usando Home Assistant para toda la domótica de 
 
 ![hackers-gonna-hack]
 
-
-
 [hackers-gonna-hack]: /007-publicar-y-proteger-hassio/dedondevienenestasvisitas.png "Who are these visitors"
