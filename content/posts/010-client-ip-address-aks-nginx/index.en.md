@@ -6,11 +6,11 @@ featured_image : "https://live.staticflickr.com/7046/7016112897_8f64ba97e7_k.jpg
 description : ""
 draft : false
 ---
-Getting your client IP address is key for application telemetry, for getting the
-client country or any other info you may need. Anyway, when you deploy a .Net
-Core app on AKS and you are using an NGINX ingress, that you didn't explicitely
-configure, the IP address you will be receiving into your app may not be
-what you expected.
+There are many times when you need to get your client IP address: for
+application telemetry, for getting the client country or any other info you may
+need. Anyway, when you deploy a .Net Core app on AKS and you are using an NGINX
+ingress, that you didn't explicitely configure, the IP address you will be
+receiving into your app may not be what you expected.
 
 <!--more-->
 
@@ -22,17 +22,17 @@ things.
 
 ## Ingress Controller configuration
 
-When deploying the ingress controller with `helm` on AKS, you need to set this
-specific option, that it is [well documented][ingress-basic] but it is not
+When deploying the ingress controller with `helm` on AKS, you need to set an
+specific option; it is [well documented][ingress-basic] but it is not
 activated by default:
 
 ```bash
 --set controller.service.externalTrafficPolicy=Local
 ```
 
-As in my case I use [Flux][flux] so I can do GitOps on my cluster, I need to
-define the configuration inside the `values` section (Flux does not admit the
-abbreviated form):
+As in my case I use [Flux][flux], so I can do GitOps on my cluster, I need to
+define the this configuration setting inside the `values` section (Flux does not
+admit the abbreviated form):
 
 ```yaml
 apiVersion: helm.toolkit.fluxcd.io/v2beta1
@@ -68,11 +68,11 @@ it comes from the assigned IP of the Pod that is currently running.
 
 ![This is better][notmyip]
 
-## Cambios en el código
+## Code changes
 
 ASP.Net Core does not use the `X-Forwarded-For` header by default. This helps
-you avoid security risks, and furthermor, if the application is not behind a
-proxy you won't see the real IP address. In our case, we can configure the
+you avoid security risks, and furthermore, if the application is not behind a
+proxy you wouldn't see the real IP address. In our case, we can configure the
 Forwarded Headers middleware to correctly use the header. There's an important
 detail to configure to make it work: you need to
 [properly configure][aspnetcoreforward] the `KnownProxies` and `KnownNetworks`.
@@ -124,8 +124,8 @@ app.Run();
 But, for the sake of security, I would preferrably put the actual values we have
 in our K8s cluster. We can pass these values as environment variables, but it is
 really important to notice in which format they are coming, because sometimes
-we will get an IPv4 address format (e.g: '10.240.0.1') and in other configurations
-we may have an IPv6 address format (e.g: '::ffff:10.240.0.1').
+we will get an IPv4 address format (e.g: '10.240.0.1') and in other
+configurations we may have an IPv6 address format (e.g: '::ffff:10.240.0.1').
 
 After applying these changes you can see how we finally got the actual client
 address IP:
