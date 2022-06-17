@@ -6,10 +6,10 @@ featured_image : "https://live.staticflickr.com/7046/7016112897_8f64ba97e7_k.jpg
 description : ""
 draft : false
 ---
-Obtener la IP del cliente es algo imprescindible en muchas aplicaciones, desde
-la necesidad de capturar telemetría, o para intentar saber desde qué país
-se está conectando el usuario. Sea como sea, si desplegáis una aplicación .Net
-Core en AKS y usáis un ingress NGINX, sin ninguna modificación, verás que la
+Obtener la IP del cliente es algo imprescindible en muchas aplicaciones, para
+capturar ese valor en la telemetría, o para intentar saber desde qué país se
+está conectando el usuario. Sea como sea, si desplegáis una aplicación .Net Core
+en AKS y usáis un ingress NGINX, sin ninguna modificación, verás que la
 dirección IP del cliente no es la que te esperabas.
 
 <!--more-->
