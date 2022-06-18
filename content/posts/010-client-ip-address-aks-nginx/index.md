@@ -9,8 +9,8 @@ draft : false
 Obtener la IP del cliente es algo imprescindible en muchas aplicaciones, para
 capturar ese valor en la telemetría, o para intentar saber desde qué país se
 está conectando el usuario. Sea como sea, si desplegáis una aplicación .Net Core
-en AKS y usáis un ingress NGINX, sin ninguna modificación, verás que la
-dirección IP del cliente no es la que te esperabas.
+en AKS y usáis un ingress NGINX, sin ninguna modificación, veréis que la
+dirección IP del cliente no es la que os esperábais.
 
 <!--more-->
 
@@ -61,8 +61,13 @@ spec:
 
 Una vez configurado podremos ver que en la cabecera `X-Forwarded-For` aparece ya
  nuestra IP, pero si miramos en la propiedad
-```Request.HttpContext.Connection.LocalIpAddress``` seguimos teniendo una IP
-que (::ffff:10.240.0.14) que en este caso se corresponde con la IP asignada a mi
+
+
+```csharp
+Request.HttpContext.Connection.LocalIpAddress
+```
+
+seguimos teniendo una IP (::ffff:10.240.0.14) que en este caso se corresponde con la IP asignada a mi
  Pod directamente porque estoy usando Azure CNI.
 
 ![Vamos mejorando][notmyip]
